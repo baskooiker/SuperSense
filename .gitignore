@@ -214,3 +214,6 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 GestureSetTest3.csv
+.dep.inc
+SimpleGestures2.mov.dat_mpResults.csv
+gestureSet2_1.mov.dat
