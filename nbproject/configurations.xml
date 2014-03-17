@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="89">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>GVFTester.h</itemPath>
+      <itemPath>GestureSetEvaluation.h</itemPath>
+      <itemPath>SyncDataEvaluation.h</itemPath>
+      <itemPath>../../../gvf-master/src/features.h</itemPath>
+      <itemPath>../../../gvf-master/src/init.h</itemPath>
+      <itemPath>../../../gvf-master/src/test_gesture_set.h</itemPath>
+      <itemPath>../../../gvf-master/src/test_mp.h</itemPath>
+      <itemPath>../../../gvf-master/src/test_on_interval.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+      <itemPath>../../../gvf-master/src/GestureVariationFollower.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>GVFTester.cpp</itemPath>
+      <itemPath>GestureSetEvaluation.cpp</itemPath>
+      <itemPath>SyncDataEvaluation.cpp</itemPath>
+      <itemPath>features.cpp</itemPath>
+      <itemPath>../../../gvf-master/src/init.cpp</itemPath>
+      <itemPath>newmain.cpp</itemPath>
+      <itemPath>../../../gvf-master/src/test_gesture_set.cpp</itemPath>
+      <itemPath>../../../gvf-master/src/test_mp.cpp</itemPath>
+      <itemPath>test_on_interval.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="src" displayName="src" projectFiles="true">
+      <itemPath>../../../gvf-master/src/GestureVariationFollower.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="utils" displayName="utils" projectFiles="true">
+      <logicalFolder name="dist" displayName="dist" projectFiles="true">
+        <logicalFolder name="Debug" displayName="Debug" projectFiles="true">
+          <logicalFolder name="MinGW-Windows"
+                         displayName="MinGW-Windows"
+                         projectFiles="true">
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <itemPath>../utils/HistogramBuffer.cpp</itemPath>
+      <itemPath>../utils/HistogramBuffer.h</itemPath>
+      <itemPath>../utils/Makefile</itemPath>
+      <itemPath>../utils/Swarm.cpp</itemPath>
+      <itemPath>../utils/Swarm.h</itemPath>
+      <itemPath>../utils/m_pd.h</itemPath>
+      <itemPath>../utils/utils.cpp</itemPath>
+      <itemPath>../utils/utils.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <itemPath>../YIN/YIN.cpp</itemPath>
+    <itemPath>../YIN/YIN.h</itemPath>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../../../gvf-master/src</Elem>
+    <Elem>../yin</Elem>
+    <Elem>../utils</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <incDir>
+            <pElem>../../../gvf-master/src</pElem>
+            <pElem>../../../gvf-master/Eigen</pElem>
+            <pElem>../utils</pElem>
+            <pElem>../YIN</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>../../../gvf-master/Eigen</pElem>
+            <pElem>../../../gvf-master/src</pElem>
+            <pElem>../utils</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>../../../gvf-master/src</pElem>
+            <pElem>../../../gvf-master/Eigen</pElem>
+            <pElem>../utils</pElem>
+            <pElem>../YIN</pElem>
+          </linkerAddLib>
+          <linkerLibItems>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../utils"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../utils"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libutils.${CND_DLIB_EXT}">
+              </makeArtifact>
+            </linkerLibProjectItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../../../gvf-master/src/GestureVariationFollower.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/GestureVariationFollower.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/features.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/init.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/init.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_gesture_set.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_gesture_set.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_mp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_mp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_on_interval.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../YIN/YIN.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../YIN/YIN.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/HistogramBuffer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../utils/HistogramBuffer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/Swarm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../utils/Swarm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/m_pd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../utils/utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GVFTester.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GestureSetEvaluation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GestureSetEvaluation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SyncDataEvaluation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SyncDataEvaluation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="features.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="newmain.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test_on_interval.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../../../gvf-master/src</pElem>
+            <pElem>../../../gvf-master/Eigen</pElem>
+            <pElem>../utils</pElem>
+            <pElem>../YIN</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>../../../gvf-master/Eigen</pElem>
+            <pElem>../../../gvf-master/src</pElem>
+            <pElem>../utils</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>../../../gvf-master/src</pElem>
+            <pElem>../../../gvf-master/Eigen</pElem>
+            <pElem>../utils</pElem>
+            <pElem>../YIN</pElem>
+          </linkerAddLib>
+        </linkerTool>
+      </compileType>
+      <item path="../../../gvf-master/src/GestureVariationFollower.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/GestureVariationFollower.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/features.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/init.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/init.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_gesture_set.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_gesture_set.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_mp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_mp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../gvf-master/src/test_on_interval.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../YIN/YIN.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../YIN/YIN.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/HistogramBuffer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../utils/HistogramBuffer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/Swarm.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../utils/Swarm.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/m_pd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../utils/utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../utils/utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GVFTester.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GestureSetEvaluation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="GestureSetEvaluation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SyncDataEvaluation.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SyncDataEvaluation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="features.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="newmain.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test_on_interval.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
