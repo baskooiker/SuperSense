@@ -76,6 +76,9 @@ protected:
     string filename;
     int gestNumber;
     ofstream out;
+    
+    float multiplier;
+    float alpha;
 };
 
 #endif	/* GESTURESETEVALUATION_H */

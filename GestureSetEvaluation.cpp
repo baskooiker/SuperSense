@@ -81,6 +81,9 @@ void GestureSetEvaluation::initValues() {
 
     filename = "";
     gestNumber = 0;
+    
+    alpha = 1.;
+    multiplier = 50.;
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -102,7 +105,7 @@ GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<fl
                 }
                 vector<float> newSample;
                 for (int k = 0; k < 3; k++)
-                    newSample.push_back(sample[k] * 50. - 25.);
+                    newSample.push_back(sample[k]);
                 gvf->fillTemplate(i, newSample);
             } else {
                 if (((int) sample[3]) == gs[i] && ((int) sample[4]) == 1) {
@@ -160,7 +163,7 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
 
         vector<float> newSample;
         for (int i = 0; i < 3; i++)
-            newSample.push_back(data[j][i] * 50. - 25.);
+            newSample.push_back(data[j][i]);
         gvf->infer(newSample);
 
         // if gesture starts, spread particles
@@ -223,12 +226,13 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     printf("performance = %.3f \n\n", sum);
 
     // write results to file
-    out.open("GestureSetTest3.csv", fstream::out | fstream::app);
+    out.open("GestureSetTest4.csv", fstream::out | fstream::app);
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";
     out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum;
 
     out << ";" << numberOfParticles << ";" << resmapleThreshold << ";" << pdim << ";" << icov << ";";
+    out << alpha << ";" << multiplier << ";";
     out << spreadMeanPos << ";" << spreadMeanVel << ";" << spreadMeanSca << ";" << spreadMeanOff << ";" << spreadMeanRot << ";";
     out << spreadRangePos << ";" << spreadRangeVel << ";" << spreadRangeSca << ";" << spreadRangeOff << ";" << spreadRangeRot << ";";
     out << sigPos << ";" << sigVel << ";" << sigSca << ";" << sigOff << ";" << sigRot << ";" << sum;

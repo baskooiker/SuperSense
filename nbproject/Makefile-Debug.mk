@@ -40,8 +40,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1786399364/test_gesture_set.o \
 	${OBJECTDIR}/_ext/1786399364/test_mp.o \
 	${OBJECTDIR}/_ext/1360910959/YIN.o \
+	${OBJECTDIR}/_ext/2102424670/AlphaFilter.o \
 	${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o \
-	${OBJECTDIR}/_ext/2102424670/Swarm.o \
 	${OBJECTDIR}/_ext/2102424670/utils.o \
 	${OBJECTDIR}/GVFTester.o \
 	${OBJECTDIR}/GestureSetEvaluation.o \
@@ -102,15 +102,15 @@ ${OBJECTDIR}/_ext/1360910959/YIN.o: ../YIN/YIN.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/1360910959/YIN.o ../YIN/YIN.cpp
 
+${OBJECTDIR}/_ext/2102424670/AlphaFilter.o: ../utils/AlphaFilter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670
+	${RM} $@.d
+	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/2102424670/AlphaFilter.o ../utils/AlphaFilter.cpp
+
 ${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o: ../utils/HistogramBuffer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o ../utils/HistogramBuffer.cpp
-
-${OBJECTDIR}/_ext/2102424670/Swarm.o: ../utils/Swarm.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/2102424670/Swarm.o ../utils/Swarm.cpp
 
 ${OBJECTDIR}/_ext/2102424670/utils.o: ../utils/utils.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670

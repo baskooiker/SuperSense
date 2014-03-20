@@ -12,6 +12,7 @@
 #include "SyncDataEvaluation.h"
 //#include <test_mp.h>
 #include "GestureSetEvaluation.h"
+#include "AlphaFilter.h"
 
 #include <string>
 #include <vector>
@@ -22,16 +23,15 @@ using namespace std;
 /*
  * 
  */
-int main(int argc, char** argv) {
-
+int main(int argc, char** argv) {  
     vector<string> filenames;
-    filenames.push_back("joyce8_2.dat");
+//    filenames.push_back("joyce8_2.dat");
     filenames.push_back("joyce8_3.dat");
-    filenames.push_back("bas8_2.dat");
-    filenames.push_back("bas8_3.dat");
+//    filenames.push_back("bas8_2.dat");
+//    filenames.push_back("bas8_3.dat");
     filenames.push_back("bas8_4.dat");
-    filenames.push_back("nico8.dat");
-    filenames.push_back("nico8_2.dat");
+//    filenames.push_back("nico8.dat");
+//    filenames.push_back("nico8_2.dat");
     filenames.push_back("nico8_3.dat");
     
     SyncDataEvaluation* sde = new SyncDataEvaluation(filenames);
