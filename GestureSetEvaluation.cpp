@@ -79,11 +79,16 @@ void GestureSetEvaluation::initValues() {
 
     gvf = new GestureVariationFollower(numberOfParticles, sigs, 1. / (icov * icov), resmapleThreshold, 0.);
 
-    filename = "";
+    filename = "realDataBas14times5gestures.dat";
     gestNumber = 0;
-    
+
     alpha = 1.;
     multiplier = 50.;
+
+    outputFilename = "GestureSetTest4.csv";
+    totalNrGest = 14;
+
+    skip = 0;
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -136,9 +141,28 @@ string GestureSetEvaluation::gestureSetString(vector<int> v) {
     return returnstring;
 }
 
+int GestureSetEvaluation::getClassifiedGesture(int nr) {
+    Eigen::VectorXf stat = gvf->getGestureConditionnalProbabilities();
+    int index = 0;
+    float val = -1.0f;
+    for (int k = 0; k < nr; k++) {
+        if (stat(k) > val) {
+            index = k;
+            val = stat(k);
+        }
+    }
+    return index;
+}
+
+void GestureSetEvaluation::inferSample(vector<vector<float> > data, int j) {
+    vector<float> newSample;
+    for (int i = 0; i < 3; i++)
+        newSample.push_back(data[j][i]);
+    gvf->infer(newSample);
+}
+
 float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<vector<float> > data, vector<int> gestureSet) {
     int nr = gestureSet.size();
-    int totalNrGest = 14;
     float confusion[totalNrGest][totalNrGest];
     for (int i = 0; i < totalNrGest; i++)
         for (int j = 0; j < totalNrGest; j++)
@@ -146,47 +170,42 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
 
     gvf->spreadParticles(mpvrs, rpvrs);
 
-    for (int j = 0; j < 50; j++)
-        printf("=");
-    printf("\n");
+    //    for (int j = 0; j < 50; j++)
+    //        printf("=");
+    //    printf("\n");
     int processBar = 0;
     int currentGest = 0;
-    //    int currentIndex = -1;
 
     // ===================== The actual loop =====================
     for (int j = 0; j < data.size(); j++) {
-        int var = j / (data.size() / 50);
-        if (var > processBar) {
-            processBar = var;
-            printf("=");
-        }
-
-        vector<float> newSample;
-        for (int i = 0; i < 3; i++)
-            newSample.push_back(data[j][i]);
-        gvf->infer(newSample);
+        //        int var = j / (data.size() / 50);
+        //        if (var > processBar) {
+        //            processBar = var;
+        //            printf("=");
+        //        }
 
         // if gesture starts, spread particles
         int indicator = (int) data.at(j).at(4);
         if (indicator == 0) {
             if (currentGest > 0) {
-
-                Eigen::VectorXf stat = gvf->getGestureConditionnalProbabilities();
-                int index = 0;
-                float val = -1.0f;
-                for (int k = 0; k < nr; k++) {
-                    if (stat(k) > val) {
-                        index = k;
-                        val = stat(k);
-                    }
-                }
+                int index = getClassifiedGesture(nr);
                 confusion[currentGest - 1][gestureSet[index] - 1] += 1;
+                inferSample(data, j);
             }
         } else {
-            gvf->spreadParticles(mpvrs, rpvrs);
-            currentGest = (int) data.at(j).at(3);
+            if (currentGest > 0) {
+                int index = getClassifiedGesture(nr);
+                confusion[currentGest - 1][gestureSet[index] - 1] += 1;
+            }
 
+            int gestVal = (int) data.at(j).at(3);
+            if (contains(gestureSet, gestVal)) {
+                gvf->spreadParticles(mpvrs, rpvrs);
+                currentGest = gestVal;
+                inferSample(data, j);
+            }
         }
+
         if (j > 0) {
             if (((int) data.at(j).at(3)) != ((int) data.at(j - 1).at(3))) {
                 currentGest = 0;
@@ -226,7 +245,7 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     printf("performance = %.3f \n\n", sum);
 
     // write results to file
-    out.open("GestureSetTest4.csv", fstream::out | fstream::app);
+    out.open(outputFilename.c_str(), fstream::out | fstream::app);
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";
     out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum;
@@ -304,17 +323,17 @@ vector<vector<int> > GestureSetEvaluation::getGestureSets() {
     return gestureSets;
 }
 
-vector<vector<int> > GestureSetEvaluation::setsOf3() {
+vector<vector<int> > GestureSetEvaluation::setsOf3(int from, int to) {
     vector<vector<int> > gestureSets;
 
-    for (int i = 1; i <= 14; i++) {
-        for (int j = i + 1; j <= 14; j++) {
-            for (int k = j + 1; k <= 14; k++) {
-                vector<int>* gs = new vector<int>;
-                gs->push_back(i);
-                gs->push_back(j);
-                gs->push_back(k);
-                gestureSets.push_back(*gs);
+    for (int i = from; i <= to; i++) {
+        for (int j = i + 1; j <= to; j++) {
+            for (int k = j + 1; k <= to; k++) {
+                vector<int> gs = vector<int>();
+                gs.push_back(i);
+                gs.push_back(j);
+                gs.push_back(k);
+                gestureSets.push_back(gs);
             }
         }
     }
@@ -322,15 +341,14 @@ vector<vector<int> > GestureSetEvaluation::setsOf3() {
     return gestureSets;
 }
 
-vector<vector<int> > GestureSetEvaluation::setsOf2() {
+vector<vector<int> > GestureSetEvaluation::setsOf2(int from, int to) {
     vector<vector<int> > gestureSets;
-    for (int i = 1; i <= 14; i++) {
-        for (int j = i + 1; j <= 14; j++) {
+    for (int i = from; i <= to; i++) {
+        for (int j = i + 1; j <= to; j++) {
             vector<int>* gs = new vector<int>;
             gs->push_back(i);
             gs->push_back(j);
             gestureSets.push_back(*gs);
-
         }
     }
     return gestureSets;
@@ -338,16 +356,19 @@ vector<vector<int> > GestureSetEvaluation::setsOf2() {
 
 vector<vector<int> > GestureSetEvaluation::add1(vector<int> v) {
     vector<vector<int> > gs;
-    for (int i = 1; i <= 14; i++) {
-        bool isInV = false;
-        for (int j = 0; j < v.size() && !isInV; j++) {
-            isInV = i == v[j];
-        }
-        if (!isInV) {
+    for (int i = 1; i <= totalNrGest; i++) {
+        if (!contains(v, i)) {
+            bool pushed = false;
             vector<int> newV;
-            for (int j = 0; j < v.size(); j++)
+            for (int j = 0; j < v.size(); j++) {
+                if (v[j] > i && !pushed) {
+                    newV.push_back(i);
+                    pushed = true;
+                }
                 newV.push_back(v[j]);
-            newV.push_back(i);
+            }
+            if (!pushed)
+                newV.push_back(i);
             gs.push_back(newV);
         }
     }
@@ -361,12 +382,131 @@ bool GestureSetEvaluation::contains(vector<int> v, int e) {
     return false;
 }
 
+vector<int> GestureSetEvaluation::newPair(int i, int j) {
+    vector<int> pair = vector<int>();
+    pair.push_back(i);
+    pair.push_back(j);
+    return pair;
+}
+
+vector<int> GestureSetEvaluation::newTri(int i, int j, int k) {
+    vector<int> pair = vector<int>();
+    pair.push_back(i);
+    pair.push_back(j);
+    pair.push_back(k);
+    return pair;
+}
+
+vector<int> GestureSetEvaluation::newQuad(int i, int j, int k, int l) {
+    vector<int> pair = vector<int>();
+    pair.push_back(i);
+    pair.push_back(j);
+    pair.push_back(k);
+    pair.push_back(l);
+    return pair;
+}
+
+vector<int> GestureSetEvaluation::newSet(int i, int j, int k, int l, int m) {
+    vector<int> pair = vector<int>();
+    pair.push_back(i);
+    pair.push_back(j);
+    pair.push_back(k);
+    pair.push_back(l);
+    pair.push_back(m);
+    return pair;
+}
+
+vector<int> GestureSetEvaluation::newSet(int i, int j, int k, int l, int m, int n) {
+    vector<int> pair = vector<int>();
+    pair.push_back(i);
+    pair.push_back(j);
+    pair.push_back(k);
+    pair.push_back(l);
+    pair.push_back(m);
+    pair.push_back(n);
+    return pair;
+}
+
+vector<int> GestureSetEvaluation::newSet(int i, int j, int k, int l, int m, int n, int o) {
+    vector<int> pair = vector<int>();
+    pair.push_back(i);
+    pair.push_back(j);
+    pair.push_back(k);
+    pair.push_back(l);
+    pair.push_back(m);
+    pair.push_back(n);
+    pair.push_back(o);
+    return pair;
+}
+
+void GestureSetEvaluation::addPairs(vector<vector<int> >* pairs, vector<int> pair) {
+    vector<vector<int> > tris = add1(pair);
+    for (int i = 0; i < tris.size(); i++)
+        pairs->push_back(tris[i]);
+}
+
+vector<vector<int> > GestureSetEvaluation::getBestPairsExtended() {
+    vector<vector<int> >* pairs = new vector<vector<int> >();
+    addPairs(pairs, newSet(11,12,18,19,20));
+    addPairs(pairs, newSet(8, 12, 18, 19, 20));
+    addPairs(pairs, newSet(9, 14, 18, 19, 20));
+    addPairs(pairs, newSet(9, 11, 12, 19, 20));
+    addPairs(pairs, newSet(12, 17, 18, 19, 20));
+    addPairs(pairs, newSet(9, 17, 18, 19, 20));
+    addPairs(pairs, newSet(10, 11, 12, 19, 20));
+    addPairs(pairs, newSet(12, 14, 18, 19, 20));
+    addPairs(pairs, newSet(9, 12, 18, 19, 20));
+    addPairs(pairs, newSet(10, 12, 18, 19, 20));
+    return *pairs;
+}
+
+void removeDuplicates(vector<vector<int> >* sets) {
+    for (int i = 0; i < sets->size(); i++) {
+        for (int j = i + 1; j < sets->size(); j++) {
+            bool dif = false;
+            for (int k = 0; (k < sets->at(i).size()) && !dif; k++) {
+                if (sets->at(i)[k] != sets->at(j)[k]) {
+                    dif = true;
+                }
+            }
+            if (!dif) {
+                sets->erase((sets->begin()) + j);
+                j--;
+            }
+        }
+    }
+}
+
+void GestureSetEvaluation::evaluatePairs() {
+    vector<vector<int> > sets = getBestPairsExtended();
+    printf("there are %d pairs\n", sets.size());
+    removeDuplicates(&sets);
+    printf("there are %d pairs\n", sets.size());
+    for (int i = 0; i < sets.size(); i++) {
+        for (int j = 0; j < sets[i].size(); j++)
+            printf("%d ", sets[i][j]);
+        printf("\n");
+    }
+    printf("there are %d pairs\n", sets.size());
+
+    vector<vector<float> > data = loadData2(filename);
+
+    //    for (skip = 1; skip < 8; skip += 2) {
+    for (int i = 0; i < sets.size(); i++) {
+        printf("gestureset %d of %d, %s, skip = %d\n", i, sets.size(), gestureSetString(sets[i]).c_str(), skip);
+        GestureVariationFollower* gvf = trainClassifier(data, sets[i], skip);
+        printf("\n");
+        testProcedure(gvf, data, sets[i]);
+    }
+    //    }
+
+}
+
 void GestureSetEvaluation::evaluate() {
     vector<vector<int> > gs;
     vector<int> s1;
     s1.push_back(3);
     s1.push_back(4);
-    filename = "realDataBas14times5gestures.dat";
 
     vector<vector<float> > data = loadData2(filename);
 
@@ -394,4 +534,22 @@ void GestureSetEvaluation::evaluate() {
     }
 
 }
+
+void GestureSetEvaluation::setFilename(string fn) {
+    filename = fn;
+}
+
+void GestureSetEvaluation::setOutputFilename(string fn) {
+    outputFilename = fn;
+}
+
+void GestureSetEvaluation::setTotalNrGest(int t) {
+    totalNrGest = t;
+}
+
+void GestureSetEvaluation::setSkip(int t) {
+    skip = t;
+}
+
+
 

@@ -25,7 +25,6 @@ public:
     void optimizeGVFParameters();
     
 protected:
-    vector<string> filenames;
     YIN* yin;
     float syncTestProcedure(vector<vector<float> > data);
     

@@ -56,7 +56,7 @@ float SyncDataEvaluation::syncTestProcedure(vector<vector<float> > data) {
     for (int i = 0; i < data.size(); i++) {
         vector<float> newSample;
         for (int j = 0; j < 3; j++)
-            newSample.push_back(data[i][j] * 50. - 25.);
+            newSample.push_back(data[i][j]);
 
         if ((int) data[i][3] != lastGest) {
             isSync = 0;
@@ -97,7 +97,6 @@ void SyncDataEvaluation::evaluate() {
         vector<vector<float> > data = loadData2(filenames[i], 50., 1.);
 
         vector<int> gests = gesturesInData(data);
-        printf("data length = %d\n", data.size());
 
         yin = new YIN(3);
         yin->setAverageThreshold(.7);
@@ -106,12 +105,12 @@ void SyncDataEvaluation::evaluate() {
         yin->setMaxDelay(150);
         yin->setMinDips(2);
 
-        //        float perf = syncTestProcedure(data);
+        float perf = syncTestProcedure(data);
 
-        for (int j = 0; j < 7; j++) {
+        int nrOfRuns = 7;
+
+        for (int j = 1; j < nrOfRuns; j++) {
             gvf = trainClassifier(data, gests, j);
-            //            for(int k = 0; k < gvf->getNbOfTemplates(); k++)
-            //                printf("tmpl %d = %d\n", k, gvf->getLengthOfTemplateByInd(k));
             testProcedure(gvf, data, gests);
         }
     }
@@ -141,142 +140,142 @@ void SyncDataEvaluation::optimizeGVFParameters() {
                 sumPerf += testProcedure(gvf, data, gests);
             }
         }
-        if(sumPerf > bestPerf){
+        if (sumPerf > bestPerf) {
             bestPerf = sumPerf;
             bestVal = s;
         }
     }
     alpha = bestVal;
-    
-//    for (float _icov = .65; _icov < .9; _icov += .1) {
-//        icov = _icov;
-//        sumPerf = 0.f;
-//        for (int i = 0; i < filenames.size(); i++) {
-//            filename = filenames[i];
-//            vector<vector<float> > data = loadData2(filename, multiplier, alpha);
-//            vector<int> gests = gesturesInData(data);
-//            for (int j = 1; j < 7; j += 4) {
-//                printf("%s: icov = %f, gestNr = %d\n", filename.c_str(), icov, j);
-//                gvf = trainClassifier(data, gests, j);
-//                sumPerf += testProcedure(gvf, data, gests);
-//            }
-//        }
-//        if(sumPerf > bestPerf){
-//            bestPerf = sumPerf;
-//            bestVal = _icov;
-//        }
-//    }
-//    icov = bestVal;
-//    
-//    for (float _sigOff = .00001; _sigOff <= .001; _sigOff *= 10.) {
-//        sigOff = _sigOff;
-//        setSigs();
-//        sumPerf = 0.f;
-//        for (int i = 0; i < filenames.size(); i++) {
-//            filename = filenames[i];
-//            vector<vector<float> > data = loadData2(filename);
-//            vector<int> gests = gesturesInData(data);
-//            for (int j = 1; j < 7; j += 4) {
-//                printf("%s: sigOff = %f, gestNr = %d\n", filename.c_str(), sigOff, j);
-//                gvf = trainClassifier(data, gests, j);
-//                sumPerf += testProcedure(gvf, data, gests);
-//            }
-//        }
-//        if(sumPerf > bestPerf){
-//            bestPerf = sumPerf;
-//            bestVal = _sigOff;
-//        }
-//    }
-//    sigOff = bestVal;
-//    setSigs();
-//    
-//    float s;
-//    for (s = .00001; s <= .001; s *= 10.) {
-//        sigPos = s;
-//        setSigs();
-//        sumPerf = 0.f;
-//        for (int i = 0; i < filenames.size(); i++) {
-//            filename = filenames[i];
-//            vector<vector<float> > data = loadData2(filename);
-//            vector<int> gests = gesturesInData(data);
-//            for (int j = 1; j < 7; j += 4) {
-//                printf("%s: sigPos = %f, gestNr = %d\n", filename.c_str(), sigPos, j);
-//                gvf = trainClassifier(data, gests, j);
-//                sumPerf += testProcedure(gvf, data, gests);
-//            }
-//        }
-//        if(sumPerf > bestPerf){
-//            bestPerf = sumPerf;
-//            bestVal = s;
-//        }
-//    }
-//    sigPos = bestVal;
-//    setSigs();
-//    
-//    for (s = .00001; s <= .001; s *= 10.) {
-//        sigRot = s;
-//        setSigs();
-//        sumPerf = 0.f;
-//        for (int i = 0; i < filenames.size(); i++) {
-//            filename = filenames[i];
-//            vector<vector<float> > data = loadData2(filename);
-//            vector<int> gests = gesturesInData(data);
-//            for (int j = 1; j < 7; j += 4) {
-//                printf("%s: sigRot = %f, gestNr = %d\n", filename.c_str(), sigRot, j);
-//                gvf = trainClassifier(data, gests, j);
-//                sumPerf += testProcedure(gvf, data, gests);
-//            }
-//        }
-//        if(sumPerf > bestPerf){
-//            bestPerf = sumPerf;
-//            bestVal = s;
-//        }
-//    }
-//    sigRot = bestVal;
-//    setSigs();
-//    
-//    for (s = .00001; s <= .001; s *= 10.) {
-//        sigSca = s;
-//        setSigs();
-//        sumPerf = 0.f;
-//        for (int i = 0; i < filenames.size(); i++) {
-//            filename = filenames[i];
-//            vector<vector<float> > data = loadData2(filename);
-//            vector<int> gests = gesturesInData(data);
-//            for (int j = 1; j < 7; j += 4) {
-//                printf("%s: sigSca = %f, gestNr = %d\n", filename.c_str(), sigSca, j);
-//                gvf = trainClassifier(data, gests, j);
-//                sumPerf += testProcedure(gvf, data, gests);
-//            }
-//        }
-//        if(sumPerf > bestPerf){
-//            bestPerf = sumPerf;
-//            bestVal = s;
-//        }
-//    }
-//    sigSca = bestVal;
-//    setSigs();
-//    
-//    for (s = .00001; s <= .001; s *= 10.) {
-//        sigVel = s;
-//        setSigs();
-//        sumPerf = 0.f;
-//        for (int i = 0; i < filenames.size(); i++) {
-//            filename = filenames[i];
-//            vector<vector<float> > data = loadData2(filename);
-//            vector<int> gests = gesturesInData(data);
-//            for (int j = 1; j < 7; j += 4) {
-//                printf("%s: sigVel = %f, gestNr = %d\n", filename.c_str(), sigVel, j);
-//                gvf = trainClassifier(data, gests, j);
-//                sumPerf += testProcedure(gvf, data, gests);
-//            }
-//        }
-//        if(sumPerf > bestPerf){
-//            bestPerf = sumPerf;
-//            bestVal = s;
-//        }
-//    }
-//    sigVel = bestVal;
-//    setSigs();
-    
+
+    //    for (float _icov = .65; _icov < .9; _icov += .1) {
+    //        icov = _icov;
+    //        sumPerf = 0.f;
+    //        for (int i = 0; i < filenames.size(); i++) {
+    //            filename = filenames[i];
+    //            vector<vector<float> > data = loadData2(filename, multiplier, alpha);
+    //            vector<int> gests = gesturesInData(data);
+    //            for (int j = 1; j < 7; j += 4) {
+    //                printf("%s: icov = %f, gestNr = %d\n", filename.c_str(), icov, j);
+    //                gvf = trainClassifier(data, gests, j);
+    //                sumPerf += testProcedure(gvf, data, gests);
+    //            }
+    //        }
+    //        if(sumPerf > bestPerf){
+    //            bestPerf = sumPerf;
+    //            bestVal = _icov;
+    //        }
+    //    }
+    //    icov = bestVal;
+    //    
+    //    for (float _sigOff = .00001; _sigOff <= .001; _sigOff *= 10.) {
+    //        sigOff = _sigOff;
+    //        setSigs();
+    //        sumPerf = 0.f;
+    //        for (int i = 0; i < filenames.size(); i++) {
+    //            filename = filenames[i];
+    //            vector<vector<float> > data = loadData2(filename);
+    //            vector<int> gests = gesturesInData(data);
+    //            for (int j = 1; j < 7; j += 4) {
+    //                printf("%s: sigOff = %f, gestNr = %d\n", filename.c_str(), sigOff, j);
+    //                gvf = trainClassifier(data, gests, j);
+    //                sumPerf += testProcedure(gvf, data, gests);
+    //            }
+    //        }
+    //        if(sumPerf > bestPerf){
+    //            bestPerf = sumPerf;
+    //            bestVal = _sigOff;
+    //        }
+    //    }
+    //    sigOff = bestVal;
+    //    setSigs();
+    //    
+    //    float s;
+    //    for (s = .00001; s <= .001; s *= 10.) {
+    //        sigPos = s;
+    //        setSigs();
+    //        sumPerf = 0.f;
+    //        for (int i = 0; i < filenames.size(); i++) {
+    //            filename = filenames[i];
+    //            vector<vector<float> > data = loadData2(filename);
+    //            vector<int> gests = gesturesInData(data);
+    //            for (int j = 1; j < 7; j += 4) {
+    //                printf("%s: sigPos = %f, gestNr = %d\n", filename.c_str(), sigPos, j);
+    //                gvf = trainClassifier(data, gests, j);
+    //                sumPerf += testProcedure(gvf, data, gests);
+    //            }
+    //        }
+    //        if(sumPerf > bestPerf){
+    //            bestPerf = sumPerf;
+    //            bestVal = s;
+    //        }
+    //    }
+    //    sigPos = bestVal;
+    //    setSigs();
+    //    
+    //    for (s = .00001; s <= .001; s *= 10.) {
+    //        sigRot = s;
+    //        setSigs();
+    //        sumPerf = 0.f;
+    //        for (int i = 0; i < filenames.size(); i++) {
+    //            filename = filenames[i];
+    //            vector<vector<float> > data = loadData2(filename);
+    //            vector<int> gests = gesturesInData(data);
+    //            for (int j = 1; j < 7; j += 4) {
+    //                printf("%s: sigRot = %f, gestNr = %d\n", filename.c_str(), sigRot, j);
+    //                gvf = trainClassifier(data, gests, j);
+    //                sumPerf += testProcedure(gvf, data, gests);
+    //            }
+    //        }
+    //        if(sumPerf > bestPerf){
+    //            bestPerf = sumPerf;
+    //            bestVal = s;
+    //        }
+    //    }
+    //    sigRot = bestVal;
+    //    setSigs();
+    //    
+    //    for (s = .00001; s <= .001; s *= 10.) {
+    //        sigSca = s;
+    //        setSigs();
+    //        sumPerf = 0.f;
+    //        for (int i = 0; i < filenames.size(); i++) {
+    //            filename = filenames[i];
+    //            vector<vector<float> > data = loadData2(filename);
+    //            vector<int> gests = gesturesInData(data);
+    //            for (int j = 1; j < 7; j += 4) {
+    //                printf("%s: sigSca = %f, gestNr = %d\n", filename.c_str(), sigSca, j);
+    //                gvf = trainClassifier(data, gests, j);
+    //                sumPerf += testProcedure(gvf, data, gests);
+    //            }
+    //        }
+    //        if(sumPerf > bestPerf){
+    //            bestPerf = sumPerf;
+    //            bestVal = s;
+    //        }
+    //    }
+    //    sigSca = bestVal;
+    //    setSigs();
+    //    
+    //    for (s = .00001; s <= .001; s *= 10.) {
+    //        sigVel = s;
+    //        setSigs();
+    //        sumPerf = 0.f;
+    //        for (int i = 0; i < filenames.size(); i++) {
+    //            filename = filenames[i];
+    //            vector<vector<float> > data = loadData2(filename);
+    //            vector<int> gests = gesturesInData(data);
+    //            for (int j = 1; j < 7; j += 4) {
+    //                printf("%s: sigVel = %f, gestNr = %d\n", filename.c_str(), sigVel, j);
+    //                gvf = trainClassifier(data, gests, j);
+    //                sumPerf += testProcedure(gvf, data, gests);
+    //            }
+    //        }
+    //        if(sumPerf > bestPerf){
+    //            bestPerf = sumPerf;
+    //            bestVal = s;
+    //        }
+    //    }
+    //    sigVel = bestVal;
+    //    setSigs();
+
 }
