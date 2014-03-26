@@ -32,6 +32,8 @@ public:
     void setOutputFilename(string fn);
     void setTotalNrGest(int t);
     void setSkip(int t);
+    void setTo(int t);
+    void setFrom(int t);
 
 protected:
     vector<string> filenames;
@@ -99,6 +101,8 @@ protected:
     string outputFilename;
     int totalNrGest;
     int skip;
+    int from;
+    int to;
 };
 
 #endif	/* GESTURESETEVALUATION_H */

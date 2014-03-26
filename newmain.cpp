@@ -25,27 +25,33 @@ using namespace std;
 void threadOne(void* arg) {
     GestureSetEvaluation* gse = new GestureSetEvaluation();
     gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput61.csv");
+    gse->setOutputFilename("gestureset20PairsOutput671.csv");
+//    gse->setFrom(0);
+    gse->setTo(45);
     gse->setTotalNrGest(20);
-    gse->setSkip(1);
+    gse->setSkip(7);
     gse->evaluatePairs();
 }
 
 void threadTwo(void* arg) {
     GestureSetEvaluation* gse = new GestureSetEvaluation();
     gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput63.csv");
+    gse->setOutputFilename("gestureset20PairsOutput672.csv");
+    gse->setFrom(46);
+    gse->setTo(90);
     gse->setTotalNrGest(20);
-    gse->setSkip(3);
+    gse->setSkip(7);
     gse->evaluatePairs();
 }
 
 void threadThree(void* arg) {
     GestureSetEvaluation* gse = new GestureSetEvaluation();
     gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput65.csv");
+    gse->setOutputFilename("gestureset20PairsOutput673.csv");
     gse->setTotalNrGest(20);
-    gse->setSkip(5);
+    gse->setFrom(91);
+//    gse->setTo(128);
+    gse->setSkip(7);
     gse->evaluatePairs();
 }
 

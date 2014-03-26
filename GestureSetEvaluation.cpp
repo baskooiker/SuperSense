@@ -89,6 +89,9 @@ void GestureSetEvaluation::initValues() {
     totalNrGest = 14;
 
     skip = 0;
+    
+    from = -1;
+    to = -1;
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -173,11 +176,11 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     //    for (int j = 0; j < 50; j++)
     //        printf("=");
     //    printf("\n");
-    int processBar = 0;
+//    int processBar = 0;
     int currentGest = 0;
 
     // ===================== The actual loop =====================
-    for (int j = 0; j < data.size(); j++) {
+    for (int j = 0; j <= data.size(); j++) {
         //        int var = j / (data.size() / 50);
         //        if (var > processBar) {
         //            processBar = var;
@@ -482,18 +485,25 @@ void GestureSetEvaluation::evaluatePairs() {
     printf("there are %d pairs\n", sets.size());
     removeDuplicates(&sets);
     printf("there are %d pairs\n", sets.size());
-    for (int i = 0; i < sets.size(); i++) {
-        for (int j = 0; j < sets[i].size(); j++)
-            printf("%d ", sets[i][j]);
-        printf("\n");
-    }
-    printf("there are %d pairs\n", sets.size());
+//    for (int i = 0; i < sets.size(); i++) {
+//        for (int j = 0; j < sets[i].size(); j++)
+//            printf("%d ", sets[i][j]);
+//        printf("\n");
+//    }
+//    printf("there are %d pairs\n", sets.size());
 
     vector<vector<float> > data = loadData2(filename);
 
+    from = from == -1 ? 0 : from;
+    from = from > sets.size() - 1 ? sets.size() - 1 : from;
+    to = to == -1 ? sets.size() - 1 : to;
+    to = to > sets.size() - 1 ? sets.size() - 1 : to;
+    
+//    printf("from = %d to = %d\n", from, to);
+    
     //    for (skip = 1; skip < 8; skip += 2) {
-    for (int i = 0; i < sets.size(); i++) {
-        printf("gestureset %d of %d, %s, skip = %d\n", i, sets.size(), gestureSetString(sets[i]).c_str(), skip);
+    for (int i = from; i <= to; i++) {
+        printf("gestureset %d of %d, %s, skip = %d\n", i, to, gestureSetString(sets[i]).c_str(), skip);
         GestureVariationFollower* gvf = trainClassifier(data, sets[i], skip);
         printf("\n");
         testProcedure(gvf, data, sets[i]);
@@ -549,6 +559,14 @@ void GestureSetEvaluation::setTotalNrGest(int t) {
 
 void GestureSetEvaluation::setSkip(int t) {
     skip = t;
+}
+
+void GestureSetEvaluation::setFrom(int t) {
+    from = t;
+}
+
+void GestureSetEvaluation::setTo(int t) {
+    to = t;
 }
 
 
