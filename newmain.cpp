@@ -28,7 +28,7 @@ void threadOne(void* arg) {
 
     SyncDataEvaluation sde = SyncDataEvaluation(filenames);
     sde.setOutputFilename("results/free1.csv");
-    sde.setTotalNrGest420);
+    sde.setTotalNrGest(20);
     sde.evaluate();
 }
 
