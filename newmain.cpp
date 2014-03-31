@@ -25,43 +25,61 @@ using namespace std;
 void threadOne(void* arg) {
     GestureSetEvaluation* gse = new GestureSetEvaluation();
     gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput671.csv");
+    gse->setOutputFilename("gestureset20PairsOutput81.csv");
 //    gse->setFrom(0);
-    gse->setTo(45);
+//    gse->setTo(45);
     gse->setTotalNrGest(20);
-    gse->setSkip(7);
+    gse->setSkip(1);
     gse->evaluatePairs();
+    
+    
+    GestureSetEvaluation* gse2 = new GestureSetEvaluation();
+    gse2->setFilename("gestureSet20.dat");
+    gse2->setOutputFilename("gestureset20PairsOutput871.csv");
+//    gse2->setFrom(0);
+    gse2->setTo(45);
+    gse2->setTotalNrGest(20);
+    gse2->setSkip(7);
+    gse2->evaluatePairs();
 }
 
 void threadTwo(void* arg) {
     GestureSetEvaluation* gse = new GestureSetEvaluation();
     gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput672.csv");
-    gse->setFrom(46);
-    gse->setTo(90);
+    gse->setOutputFilename("gestureset20PairsOutput83.csv");
+//    gse->setFrom(46);
+//    gse->setTo(90);
     gse->setTotalNrGest(20);
-    gse->setSkip(7);
+    gse->setSkip(3);
     gse->evaluatePairs();
+    
+    GestureSetEvaluation* gse2 = new GestureSetEvaluation();
+    gse2->setFilename("gestureSet20.dat");
+    gse2->setOutputFilename("gestureset20PairsOutput872.csv");
+    gse2->setFrom(46);
+    gse2->setTo(90);
+    gse2->setTotalNrGest(20);
+    gse2->setSkip(7);
+    gse2->evaluatePairs();
 }
 
 void threadThree(void* arg) {
     GestureSetEvaluation* gse = new GestureSetEvaluation();
     gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput673.csv");
+    gse->setOutputFilename("gestureset20PairsOutput85.csv");
     gse->setTotalNrGest(20);
-    gse->setFrom(91);
+//    gse->setFrom(91);
 //    gse->setTo(128);
-    gse->setSkip(7);
+    gse->setSkip(5);
     gse->evaluatePairs();
-}
-
-void threadFour(void* arg) {
-    GestureSetEvaluation* gse = new GestureSetEvaluation();
-    gse->setFilename("gestureSet20.dat");
-    gse->setOutputFilename("gestureset20PairsOutput67.csv");
-    gse->setTotalNrGest(20);
-    gse->setSkip(7);
-    gse->evaluatePairs();
+    
+    GestureSetEvaluation* gse2 = new GestureSetEvaluation();
+    gse2->setFilename("gestureSet20.dat");
+    gse2->setOutputFilename("gestureset20PairsOutput873.csv");
+    gse2->setFrom(91);
+    gse2->setTotalNrGest(20);
+    gse2->setSkip(7);
+    gse2->evaluatePairs();
 }
 
 /*

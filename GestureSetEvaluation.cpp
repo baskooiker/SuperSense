@@ -89,7 +89,7 @@ void GestureSetEvaluation::initValues() {
     totalNrGest = 14;
 
     skip = 0;
-    
+
     from = -1;
     to = -1;
 }
@@ -176,11 +176,11 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     //    for (int j = 0; j < 50; j++)
     //        printf("=");
     //    printf("\n");
-//    int processBar = 0;
+    //    int processBar = 0;
     int currentGest = 0;
 
     // ===================== The actual loop =====================
-    for (int j = 0; j <= data.size(); j++) {
+    for (int j = 0; j < data.size(); j++) {
         //        int var = j / (data.size() / 50);
         //        if (var > processBar) {
         //            processBar = var;
@@ -450,16 +450,40 @@ void GestureSetEvaluation::addPairs(vector<vector<int> >* pairs, vector<int> pai
 
 vector<vector<int> > GestureSetEvaluation::getBestPairsExtended() {
     vector<vector<int> >* pairs = new vector<vector<int> >();
-    addPairs(pairs, newSet(11,12,18,19,20));
-    addPairs(pairs, newSet(8, 12, 18, 19, 20));
-    addPairs(pairs, newSet(9, 14, 18, 19, 20));
-    addPairs(pairs, newSet(9, 11, 12, 19, 20));
-    addPairs(pairs, newSet(12, 17, 18, 19, 20));
-    addPairs(pairs, newSet(9, 17, 18, 19, 20));
-    addPairs(pairs, newSet(10, 11, 12, 19, 20));
-    addPairs(pairs, newSet(12, 14, 18, 19, 20));
-    addPairs(pairs, newSet(9, 12, 18, 19, 20));
-    addPairs(pairs, newSet(10, 12, 18, 19, 20));
+    //    addPairs(pairs, newSet(11,12,18,19,20));
+    //    addPairs(pairs, newSet(8, 12, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 14, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 11, 12, 19, 20));
+    //    addPairs(pairs, newSet(12, 17, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 17, 18, 19, 20));
+    //    addPairs(pairs, newSet(10, 11, 12, 19, 20));
+    //    addPairs(pairs, newSet(12, 14, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 12, 18, 19, 20));
+    //    addPairs(pairs, newSet(10, 12, 18, 19, 20));
+
+
+    //    addPairs(pairs, newSet(10, 12, 14, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 14, 17, 18, 19, 20));
+    //    addPairs(pairs, newSet(8, 12, 17, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 10, 11, 12, 19, 20));
+    //    addPairs(pairs, newSet(10, 12, 17, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 10, 12, 18, 19, 20));
+    //    addPairs(pairs, newSet(10, 11, 12, 18, 19, 20));
+    //    addPairs(pairs, newSet(12, 14, 17, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 12, 14, 18, 19, 20));
+    //    addPairs(pairs, newSet(9, 12, 17, 18, 19, 20));
+
+    addPairs(pairs, newSet(1, 9, 12, 17, 18, 19, 20));
+    addPairs(pairs, newSet(9, 12, 16, 17, 18, 19, 20));
+    addPairs(pairs, newSet(9, 11, 12, 17, 18, 19, 20));
+    addPairs(pairs, newSet(3, 10, 12, 14, 18, 19, 20));
+    addPairs(pairs, newSet(10, 12, 14, 17, 18, 19, 20));
+    addPairs(pairs, newSet(6, 9, 12, 14, 18, 19, 20));
+    addPairs(pairs, newSet(3, 9, 12, 14, 18, 19, 20));
+    addPairs(pairs, newSet(9, 10, 11, 12, 18, 19, 20));
+    addPairs(pairs, newSet(9, 10, 12, 14, 18, 19, 20));
+    addPairs(pairs, newSet(9, 12, 14, 17, 18, 19, 20));
+
     return *pairs;
 }
 
@@ -485,12 +509,12 @@ void GestureSetEvaluation::evaluatePairs() {
     printf("there are %d pairs\n", sets.size());
     removeDuplicates(&sets);
     printf("there are %d pairs\n", sets.size());
-//    for (int i = 0; i < sets.size(); i++) {
-//        for (int j = 0; j < sets[i].size(); j++)
-//            printf("%d ", sets[i][j]);
-//        printf("\n");
-//    }
-//    printf("there are %d pairs\n", sets.size());
+    //    for (int i = 0; i < sets.size(); i++) {
+    //        for (int j = 0; j < sets[i].size(); j++)
+    //            printf("%d ", sets[i][j]);
+    //        printf("\n");
+    //    }
+    //    printf("there are %d pairs\n", sets.size());
 
     vector<vector<float> > data = loadData2(filename);
 
@@ -498,9 +522,9 @@ void GestureSetEvaluation::evaluatePairs() {
     from = from > sets.size() - 1 ? sets.size() - 1 : from;
     to = to == -1 ? sets.size() - 1 : to;
     to = to > sets.size() - 1 ? sets.size() - 1 : to;
-    
-//    printf("from = %d to = %d\n", from, to);
-    
+
+    //    printf("from = %d to = %d\n", from, to);
+
     //    for (skip = 1; skip < 8; skip += 2) {
     for (int i = from; i <= to; i++) {
         printf("gestureset %d of %d, %s, skip = %d\n", i, to, gestureSetString(sets[i]).c_str(), skip);
