@@ -31,7 +31,7 @@ vector<int> SyncDataEvaluation::gesturesInData(vector<vector<float> > data) {
     vector<int> gests;
     for (int i = 0; i < data.size(); i++) {
         int g = data[i][3];
-        if (!contains(gests, g))
+        if (!contains(gests, g) && g != 0)
             gests.push_back(g);
     }
     return gests;
@@ -39,8 +39,6 @@ vector<int> SyncDataEvaluation::gesturesInData(vector<vector<float> > data) {
 
 float SyncDataEvaluation::syncTestProcedure(vector<vector<float> > data) {
     vector<int> gests = gesturesInData(data);
-    for (int i = 0; i < gests.size(); i++)
-        printf("%d\n", gests[i]);
 
     int conf[2][2][gests.size()];
     for (int i = 0; i < 2; i++)
@@ -99,17 +97,17 @@ void SyncDataEvaluation::evaluate() {
         vector<int> gests = gesturesInData(data);
 
         yin = new YIN(3);
-        yin->setAverageThreshold(.7);
-        yin->setDipThreshold(.3);
+        yin->setAverageThreshold(.2);
+        yin->setDipThreshold(.1);
         yin->setMaxLength(60);
         yin->setMaxDelay(150);
         yin->setMinDips(2);
 
         float perf = syncTestProcedure(data);
 
-        int nrOfRuns = 7;
+        int nrOfRuns = 8;
 
-        for (int j = 1; j < nrOfRuns; j++) {
+        for (int j = 0; j < nrOfRuns; j++) {
             gvf = trainClassifier(data, gests, j);
             testProcedure(gvf, data, gests);
         }
