@@ -104,7 +104,7 @@ void SyncDataEvaluation::evaluate() {
 
 //        float perf = syncTestProcedure(data);
 
-        int nrOfRuns = 8;
+        int nrOfRuns = 7;
 
         for (int j = 0; j < nrOfRuns; j++) {
             printf("%s, run %d of %d\n", filenames[i].c_str(), j, nrOfRuns);
