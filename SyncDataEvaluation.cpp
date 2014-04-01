@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "init.h"
 
@@ -34,6 +35,7 @@ vector<int> SyncDataEvaluation::gesturesInData(vector<vector<float> > data) {
         if (!contains(gests, g) && g != 0)
             gests.push_back(g);
     }
+    std::sort(gests.begin(),gests.end());
     return gests;
 }
 
@@ -101,7 +103,7 @@ void SyncDataEvaluation::evaluate() {
 //        yin->setMaxLength(60);
 //        yin->setMaxDelay(150);
 //        yin->setMinDips(2);
-
+//
 //        float perf = syncTestProcedure(data);
 
         int nrOfRuns = 7;

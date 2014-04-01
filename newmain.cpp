@@ -39,49 +39,68 @@ void writeToFile(string s) {
 
 void threadOne(void* arg) {
         vector<string> filenames;
-        filenames.push_back("data/makifree_1.dat");
+//        filenames.push_back("data/makifree_1.dat");
+        filenames.push_back("data/maki_1.dat");
     
         SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-        sde.setOutputFilename("results/free.csv");
-        sde.setTotalNrGest(4);
+//        sde.setOutputFilename("results/free.csv");
+        sde.setOutputFilename("results/gestureSet.csv");
+        sde.setTotalNrGest(20);
         sde.evaluate();
-//    writeToFile("this is thread 1");
+
+        filenames.clear();
+//        filenames.push_back("data/makifree_1.dat");
+        filenames.push_back("data/makifree_1.dat");
+    
+        SyncDataEvaluation sde2 = SyncDataEvaluation(filenames);
+//        sde.setOutputFilename("results/free.csv");
+        sde2.setOutputFilename("results/free.csv");
+        sde2.setTotalNrGest(4);
+        sde2.evaluate();
 }
 
 void threadTwo(void* arg) {
-    //    //    GestureSetEvaluation* gse = new GestureSetEvaluation();
-    //    //    gse->setFilename("data/gestureSet20.dat");
-    //    //    gse->setOutputFilename("gestureset20PairsOutput83.csv");
-    //    //    gse->setTotalNrGest(20);
-    //    //    gse->setSkip(3);
-    //    //    gse->evaluatePairs();
         vector<string> filenames;
-        filenames.push_back("data/makifree_2.dat");
+//        filenames.push_back("data/makifree_2.dat");
+        filenames.push_back("data/maki_2.dat");
     
         SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-        sde.setOutputFilename("results/free.csv");
-        sde.setTotalNrGest(4);
+//        sde.setOutputFilename("results/free.csv");
+        sde.setOutputFilename("results/gestureSet.csv");
+        sde.setTotalNrGest(20);
         sde.evaluate();
-//    writeToFile("this is thread 2");
+
+        filenames.clear();
+//        filenames.push_back("data/makifree_2.dat");
+        filenames.push_back("data/makifree_2.dat");
+    
+        SyncDataEvaluation sde2 = SyncDataEvaluation(filenames);
+//        sde.setOutputFilename("results/free.csv");
+        sde2.setOutputFilename("results/free.csv");
+        sde2.setTotalNrGest(4);
+        sde2.evaluate();
 }
 
 void threadThree(void* arg) {
-    //    //    GestureSetEvaluation* gse = new GestureSetEvaluation();
-    //    //    gse->setFilename("data/gestureSet20.dat");
-    //    //    gse->setOutputFilename("gestureset20PairsOutput85.csv");
-    //    //    gse->setTotalNrGest(20);
-    //    //    gse->setSkip(5);
-    //    //    gse->evaluatePairs();
-    
         vector<string> filenames;
-        filenames.push_back("data/makifree_3.dat");
+//        filenames.push_back("data/makifree_3.dat");
+        filenames.push_back("data/maki_3.dat");
 
         SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-        sde.setOutputFilename("results/free.csv");
-        sde.setTotalNrGest(4);
+//        sde.setOutputFilename("results/free.csv");
+        sde.setOutputFilename("results/gestureSet.csv");
+        sde.setTotalNrGest(20);
         sde.evaluate();
-    
-//    writeToFile("this is thread 3");
+
+        filenames.clear();
+//        filenames.push_back("data/makifree_3.dat");
+        filenames.push_back("data/makifree_3.dat");
+
+        SyncDataEvaluation sde2 = SyncDataEvaluation(filenames);
+//        sde.setOutputFilename("results/free.csv");
+        sde2.setOutputFilename("results/free.csv");
+        sde2.setTotalNrGest(4);
+        sde2.evaluate();
 }
 
 /*
