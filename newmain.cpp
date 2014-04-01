@@ -20,31 +20,32 @@
 #include <process.h>
 #include <windows.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
 
 void writeToFile(string s) {
-    ofstream os;
+    FILE* f;
     do {
-//        Sleep(rand() % 100 + 100);
-        os.open("results/test.txt", ofstream::app | ofstream::out);
-        printf("opened for: %s\n", s.c_str());
-    } while (!os.is_open());
-    os << s.c_str() << "\n";
-    os.close();
-    printf((s + "\n").c_str());
+        f = fopen("results/test.txt", "a");
+    } while (!f);
+    fstream os;
+    os.open("results/test.txt", fstream::app | fstream::out);
+    os << s << "\n";
+//    os.close();
+//    fprintf(f, "%s\n", s.c_str());
+//    fclose(f);
 }
 
 void threadOne(void* arg) {
-    //    vector<string> filenames;
-    //    filenames.push_back("data/makifree_1.dat");
-    //
-    //    SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-    //    sde.setOutputFilename("results/free1.csv");
-    //    sde.setTotalNrGest(4);
-    //    sde.evaluate();
-
-    writeToFile("this is thread 1");
+        vector<string> filenames;
+        filenames.push_back("data/makifree_1.dat");
+    
+        SyncDataEvaluation sde = SyncDataEvaluation(filenames);
+        sde.setOutputFilename("results/free.csv");
+        sde.setTotalNrGest(4);
+        sde.evaluate();
+//    writeToFile("this is thread 1");
 }
 
 void threadTwo(void* arg) {
@@ -54,14 +55,14 @@ void threadTwo(void* arg) {
     //    //    gse->setTotalNrGest(20);
     //    //    gse->setSkip(3);
     //    //    gse->evaluatePairs();
-    //    vector<string> filenames;
-    //    filenames.push_back("data/makifree_2.dat");
-    //
-    //    SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-    //    sde.setOutputFilename("results/free2.csv");
-    //    sde.setTotalNrGest(4);
-    //    sde.evaluate();
-    writeToFile("this is thread 2");
+        vector<string> filenames;
+        filenames.push_back("data/makifree_2.dat");
+    
+        SyncDataEvaluation sde = SyncDataEvaluation(filenames);
+        sde.setOutputFilename("results/free.csv");
+        sde.setTotalNrGest(4);
+        sde.evaluate();
+//    writeToFile("this is thread 2");
 }
 
 void threadThree(void* arg) {
@@ -71,14 +72,16 @@ void threadThree(void* arg) {
     //    //    gse->setTotalNrGest(20);
     //    //    gse->setSkip(5);
     //    //    gse->evaluatePairs();
-    //    vector<string> filenames;
-    //    filenames.push_back("data/makifree_3.dat");
-    //
-    //    SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-    //    sde.setOutputFilename("results/free3.csv");
-    //    sde.setTotalNrGest(4);
-    //    sde.evaluate();
-    writeToFile("this is thread 3");
+    
+        vector<string> filenames;
+        filenames.push_back("data/makifree_3.dat");
+
+        SyncDataEvaluation sde = SyncDataEvaluation(filenames);
+        sde.setOutputFilename("results/free.csv");
+        sde.setTotalNrGest(4);
+        sde.evaluate();
+    
+//    writeToFile("this is thread 3");
 }
 
 /*
@@ -100,20 +103,15 @@ int main(int argc, char** argv) {
     //    SyncDataEvaluation* sde = new SyncDataEvaluation(filenames);
     //    sde->evaluate();
     //    sde->optimizeGVFParameters();
-    int times = 3;
-    HANDLE handles[3*times];
-    for (int i = 0; i < times; i++) {
-        handles[(i/3)] = (HANDLE) _beginthread(threadOne, 0, (void*) (i/3));
-        handles[(i/3)+1] = (HANDLE) _beginthread(threadTwo, 0, (void*) ((i/3)+1));
-        handles[(i/3)+2] = (HANDLE) _beginthread(threadThree, 0, (void*) ((1/3)+2));
-    }
+
+    HANDLE handles[3];
+    handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);
+    handles[1] = (HANDLE) _beginthread(threadTwo, 0, (void*) 1);
+    handles[2] = (HANDLE) _beginthread(threadThree, 0, (void*) 2);
     
-    for(int i = 0; i < (times * 3); i++){
-        WaitForSingleObject(handles[i], INFINITE);
-        printf("Thread %d done\n", i);
-//        WaitForSingleObject(t1, INFINITE);
-//        WaitForSingleObject(t2, INFINITE);
-//        WaitForSingleObject(t3, INFINITE);
-    }
+    for (int j = 0; j < 3; j++) 
+        WaitForSingleObject(handles[j], INFINITE);
+   
+
     return 0;
 }

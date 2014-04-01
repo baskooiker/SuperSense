@@ -91,24 +91,27 @@ void SyncDataEvaluation::evaluate() {
     for (int i = 0; i < filenames.size(); i++) {
         filename = filenames[i];
 
-        printf("%s\n", filenames[i].c_str());
         vector<vector<float> > data = loadData2(filenames[i], 50., 1.);
 
         vector<int> gests = gesturesInData(data);
 
-        yin = new YIN(3);
-        yin->setAverageThreshold(.2);
-        yin->setDipThreshold(.1);
-        yin->setMaxLength(60);
-        yin->setMaxDelay(150);
-        yin->setMinDips(2);
+//        yin = new YIN(3);
+//        yin->setAverageThreshold(.2);
+//        yin->setDipThreshold(.1);
+//        yin->setMaxLength(60);
+//        yin->setMaxDelay(150);
+//        yin->setMinDips(2);
 
-        float perf = syncTestProcedure(data);
+//        float perf = syncTestProcedure(data);
 
         int nrOfRuns = 8;
 
         for (int j = 0; j < nrOfRuns; j++) {
+            printf("%s, run %d of %d\n", filenames[i].c_str(), j, nrOfRuns);
             gvf = trainClassifier(data, gests, j);
+            for(int k = 0; k < gvf->getNbOfTemplates(); k++)
+                printf("%d ", gvf->getLengthOfTemplateByInd(k));
+            printf("\n");
             testProcedure(gvf, data, gests);
         }
     }

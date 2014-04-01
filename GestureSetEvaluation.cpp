@@ -173,19 +173,9 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
 
     gvf->spreadParticles(mpvrs, rpvrs);
 
-    //    for (int j = 0; j < 50; j++)
-    //        printf("=");
-    //    printf("\n");
-    //    int processBar = 0;
     int currentGest = 0;
-
     // ===================== The actual loop =====================
     for (int j = 0; j < data.size(); j++) {
-        //        int var = j / (data.size() / 50);
-        //        if (var > processBar) {
-        //            processBar = var;
-        //            printf("=");
-        //        }
 
         // if gesture starts, spread particles
         int indicator = (int) data.at(j).at(4);
@@ -248,6 +238,10 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     printf("performance = %.3f \n\n", sum);
 
     // write results to file
+    FILE* f;
+    do {
+        f = fopen(outputFilename.c_str(), "a");
+    } while (!f);
     out.open(outputFilename.c_str(), fstream::out | fstream::app);
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";
@@ -272,6 +266,7 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     }
     out << "\n";
     out.close();
+    fclose(f);
 
     return sum;
 }
