@@ -24,6 +24,17 @@ GestureSetEvaluation::GestureSetEvaluation(const GestureSetEvaluation& orig) {
 GestureSetEvaluation::~GestureSetEvaluation() {
 }
 
+vector<int> GestureSetEvaluation::gesturesInData(vector<vector<float> > data) {
+    vector<int> gests;
+    for (int i = 0; i < data.size(); i++) {
+        int g = data[i][3];
+        if (!contains(gests, g) && g != 0)
+            gests.push_back(g);
+    }
+    std::sort(gests.begin(),gests.end());
+    return gests;
+}
+
 void GestureSetEvaluation::setSigs() {
     sigs = Eigen::VectorXf(pdim);
     sigs << sigPos, sigVel, sigSca, sigSca, sigSca, sigOff, sigOff, sigOff, sigRot, sigRot, sigRot;
@@ -65,7 +76,7 @@ void GestureSetEvaluation::initValues() {
 
     sigPos = 0.00001; // (10) .936
     sigVel = 0.0001; // (9) .936
-    sigSca = .0001; // (8) .936
+    sigSca = 0.0001; // (8) .936
     sigOff = 0.0001; // (7) .936
     sigRot = 0.0001; // (6) .923
 

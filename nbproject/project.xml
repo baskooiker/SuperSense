@@ -15,6 +15,7 @@
                 <sourceRootElem>../../../gvf-master/src</sourceRootElem>
                 <sourceRootElem>../yin</sourceRootElem>
                 <sourceRootElem>../utils</sourceRootElem>
+                <sourceRootElem>../lbimproved</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

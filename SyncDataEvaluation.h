@@ -27,8 +27,6 @@ public:
 protected:
     YIN* yin;
     float syncTestProcedure(vector<vector<float> > data);
-    
-    vector<int> gesturesInData(vector<vector<float> > data);
 };
 
 #endif	/* SYNCDATAEVALUATION_H */

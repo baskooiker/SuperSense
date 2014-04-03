@@ -4,6 +4,8 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>DTWNNTester.h</itemPath>
+      <itemPath>DataChecker.h</itemPath>
       <itemPath>GVFTester.h</itemPath>
       <itemPath>GestureSetEvaluation.h</itemPath>
       <itemPath>SyncDataEvaluation.h</itemPath>
@@ -13,14 +15,22 @@
       <itemPath>../../../gvf-master/src/test_mp.h</itemPath>
       <itemPath>../../../gvf-master/src/test_on_interval.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="lbimproved" displayName="lbimproved" projectFiles="true">
+      <itemPath>../lbimproved/Makefile</itemPath>
+      <itemPath>../lbimproved/README</itemPath>
+      <itemPath>../lbimproved/dtw.h</itemPath>
+      <itemPath>../lbimproved/querystrategy.h</itemPath>
+      <itemPath>../lbimproved/rtreebased.h</itemPath>
+      <itemPath>../lbimproved/vectordtw.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-      <itemPath>../../../gvf-master/src/GestureVariationFollower.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>DataChecker.cpp</itemPath>
       <itemPath>GVFTester.cpp</itemPath>
       <itemPath>GestureSetEvaluation.cpp</itemPath>
       <itemPath>SyncDataEvaluation.cpp</itemPath>
@@ -29,10 +39,10 @@
       <itemPath>newmain.cpp</itemPath>
       <itemPath>../../../gvf-master/src/test_gesture_set.cpp</itemPath>
       <itemPath>../../../gvf-master/src/test_mp.cpp</itemPath>
-      <itemPath>test_on_interval.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="src" displayName="src" projectFiles="true">
       <itemPath>../../../gvf-master/src/GestureVariationFollower.cpp</itemPath>
+      <itemPath>../../../gvf-master/src/GestureVariationFollower.h</itemPath>
     </logicalFolder>
     <logicalFolder name="utils" displayName="utils" projectFiles="true">
       <logicalFolder name="dist" displayName="dist" projectFiles="true">
@@ -70,6 +80,7 @@
     <Elem>../../../gvf-master/src</Elem>
     <Elem>../yin</Elem>
     <Elem>../utils</Elem>
+    <Elem>../lbimproved</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -161,6 +172,18 @@
       </item>
       <item path="../YIN/YIN.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../lbimproved/Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/README" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/dtw.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/querystrategy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/rtreebased.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/vectordtw.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../utils/AlphaFilter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../utils/AlphaFilter.h" ex="false" tool="3" flavor2="0">
@@ -177,6 +200,12 @@
       </item>
       <item path="../utils/utils.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DTWNNTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DataChecker.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="GVFTester.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
@@ -192,8 +221,6 @@
       <item path="features.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="newmain.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="test_on_interval.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -278,6 +305,18 @@
       </item>
       <item path="../YIN/YIN.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../lbimproved/Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/README" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/dtw.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/querystrategy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/rtreebased.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../lbimproved/vectordtw.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../utils/AlphaFilter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../utils/AlphaFilter.h" ex="false" tool="3" flavor2="0">
@@ -294,6 +333,12 @@
       </item>
       <item path="../utils/utils.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DTWNNTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DataChecker.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="GVFTester.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
@@ -309,8 +354,6 @@
       <item path="features.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="newmain.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="test_on_interval.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

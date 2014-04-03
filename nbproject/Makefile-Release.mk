@@ -43,12 +43,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/2102424670/AlphaFilter.o \
 	${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o \
 	${OBJECTDIR}/_ext/2102424670/utils.o \
+	${OBJECTDIR}/DataChecker.o \
 	${OBJECTDIR}/GVFTester.o \
 	${OBJECTDIR}/GestureSetEvaluation.o \
 	${OBJECTDIR}/SyncDataEvaluation.o \
 	${OBJECTDIR}/features.o \
-	${OBJECTDIR}/newmain.o \
-	${OBJECTDIR}/test_on_interval.o
+	${OBJECTDIR}/newmain.o
 
 
 # C Compiler Flags
@@ -115,6 +115,11 @@ ${OBJECTDIR}/_ext/2102424670/utils.o: ../utils/utils.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/2102424670/utils.o ../utils/utils.cpp
 
+${OBJECTDIR}/DataChecker.o: DataChecker.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/DataChecker.o DataChecker.cpp
+
 ${OBJECTDIR}/GVFTester.o: GVFTester.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -139,11 +144,6 @@ ${OBJECTDIR}/newmain.o: newmain.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/newmain.o newmain.cpp
-
-${OBJECTDIR}/test_on_interval.o: test_on_interval.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/test_on_interval.o test_on_interval.cpp
 
 # Subprojects
 .build-subprojects:

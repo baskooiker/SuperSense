@@ -28,17 +28,6 @@ SyncDataEvaluation::SyncDataEvaluation(const SyncDataEvaluation& orig) {
 SyncDataEvaluation::~SyncDataEvaluation() {
 }
 
-vector<int> SyncDataEvaluation::gesturesInData(vector<vector<float> > data) {
-    vector<int> gests;
-    for (int i = 0; i < data.size(); i++) {
-        int g = data[i][3];
-        if (!contains(gests, g) && g != 0)
-            gests.push_back(g);
-    }
-    std::sort(gests.begin(),gests.end());
-    return gests;
-}
-
 float SyncDataEvaluation::syncTestProcedure(vector<vector<float> > data) {
     vector<int> gests = gesturesInData(data);
 
@@ -125,20 +114,15 @@ void SyncDataEvaluation::optimizeGVFParameters() {
     float sumPerf = 0;
 
     float s;
-    for (float s = 1.; s > .95; s -= .01) {
-        alpha = s;
+    for (float s = .2; s < 1.5; s += .5) {
+        spreadRangeOff = s;
         sumPerf = 0.f;
         for (int i = 0; i < filenames.size(); i++) {
             filename = filenames[i];
-            vector<vector<float> > data = loadData2(filename, multiplier, alpha);
+            vector<vector<float> > data = loadData2(filename, multiplier, spreadRangeOff);
             vector<int> gests = gesturesInData(data);
-            gests.clear();
-            gests.push_back(1);
-            gests.push_back(2);
-            gests.push_back(8);
-            gests.push_back(13);
             for (int j = 1; j < 7; j += 7) {
-                printf("%s: alpha = %f, gestNr = %d\n", filename.c_str(), alpha, j);
+                printf("%s: spreadRangeOff = %f, gestNr = %d\n", filename.c_str(), spreadRangeOff, j);
                 gvf = trainClassifier(data, gests, j);
                 sumPerf += testProcedure(gvf, data, gests);
             }
@@ -148,7 +132,7 @@ void SyncDataEvaluation::optimizeGVFParameters() {
             bestVal = s;
         }
     }
-    alpha = bestVal;
+    spreadRangeOff = bestVal;
 
     //    for (float _icov = .65; _icov < .9; _icov += .1) {
     //        icov = _icov;

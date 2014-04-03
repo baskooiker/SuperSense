@@ -59,6 +59,7 @@ protected:
     vector<int> newSet(int i, int j, int k, int l, int m, int n, int o);
     void addPairs(vector<vector<int> >* pairs, vector<int> pair);
     vector<vector<int> > getBestPairsExtended();
+    vector<int> gesturesInData(vector<vector<float> > data);
 
     Eigen::VectorXf mpvrs;
     Eigen::VectorXf rpvrs;
