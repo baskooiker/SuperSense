@@ -23,6 +23,7 @@ public:
     virtual ~SyncDataEvaluation();
     void evaluate();
     void optimizeGVFParameters();
+    void evaluateOnFirst();
     
 protected:
     YIN* yin;

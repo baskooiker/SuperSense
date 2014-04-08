@@ -35,6 +35,8 @@ public:
     void setTo(int t);
     void setFrom(int t);
 
+    bool everySample;
+
 protected:
     vector<string> filenames;
     GestureVariationFollower* trainClassifier(vector<vector<float> > data, vector<int> gs, int skip = 0);
@@ -44,6 +46,7 @@ protected:
     int getClassifiedGesture(int nr);
     void inferSample(vector<vector<float> > data, int j);
     void initValues();
+    void writeResults(vector<int> gests);
 
     void setSigs();
 
@@ -104,6 +107,10 @@ protected:
     int skip;
     int from;
     int to;
+
+    float** confusion;
+    
+    float sum;
 };
 
 #endif	/* GESTURESETEVALUATION_H */

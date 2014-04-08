@@ -31,7 +31,7 @@ vector<int> GestureSetEvaluation::gesturesInData(vector<vector<float> > data) {
         if (!contains(gests, g) && g != 0)
             gests.push_back(g);
     }
-    std::sort(gests.begin(),gests.end());
+    std::sort(gests.begin(), gests.end());
     return gests;
 }
 
@@ -68,8 +68,8 @@ void GestureSetEvaluation::initValues() {
     spreadRangePos = 1.2; // (5) .93
     spreadRangeVel = .3; // (4) .93
     spreadRangeSca = .3; // (3)was .5 .93        (4)
-    spreadRangeOff = 0.2; // (2) was .5           (3) .2 -> .881
-    spreadRangeRot = .4; // (1) .9 change   (2) change .4 -> .877
+    spreadRangeOff = 0.; // (2) was .5           (3) .2 -> .881
+    spreadRangeRot = 2.; // (1) .9 change   (2) change .4 -> .877
 
     rpvrs = Eigen::VectorXf(pdim);
     rpvrs << spreadRangePos, spreadRangeVel, spreadRangeSca, spreadRangeSca, spreadRangeSca, spreadRangeOff, spreadRangeOff, spreadRangeOff, spreadRangeRot, spreadRangeRot, spreadRangeRot;
@@ -97,17 +97,29 @@ void GestureSetEvaluation::initValues() {
     multiplier = 50.;
 
     outputFilename = "GestureSetTest4.csv";
-    totalNrGest = 14;
+    totalNrGest = 20;
 
     skip = 0;
 
     from = -1;
     to = -1;
+    
+    everySample = false;
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
     gestNumber = skip;
     delete gvf;
+
+    sigs = Eigen::VectorXf(pdim);
+    sigs << sigPos, sigVel, sigSca, sigSca, sigSca, sigOff, sigOff, sigOff, sigRot, sigRot, sigRot;
+
+    mpvrs = Eigen::VectorXf(pdim);
+    mpvrs << spreadMeanPos, spreadMeanVel, spreadMeanSca, spreadMeanSca, spreadMeanSca, spreadMeanOff, spreadMeanOff, spreadMeanOff, spreadMeanRot, spreadMeanRot, spreadMeanRot;
+
+    rpvrs = Eigen::VectorXf(pdim);
+    rpvrs << spreadRangePos, spreadRangeVel, spreadRangeSca, spreadRangeSca, spreadRangeSca, spreadRangeOff, spreadRangeOff, spreadRangeOff, spreadRangeRot, spreadRangeRot, spreadRangeRot;
+
     gvf = new GestureVariationFollower(numberOfParticles, sigs, 1. / (icov * icov), resmapleThreshold, 0.);
     for (int i = 0; i < gs.size(); i++) {
         gvf->addTemplate();
@@ -175,13 +187,18 @@ void GestureSetEvaluation::inferSample(vector<vector<float> > data, int j) {
     gvf->infer(newSample);
 }
 
-float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<vector<float> > data, vector<int> gestureSet) {
+float GestureSetEvaluation::testProcedure(GestureVariationFollower* _gvf, vector<vector<float> > data, vector<int> gestureSet) {
     int nr = gestureSet.size();
-    float confusion[totalNrGest][totalNrGest];
-    for (int i = 0; i < totalNrGest; i++)
+//    float confusion[totalNrGest][totalNrGest];
+//    confusion = float[totalNrGest][totalNrGest];
+    confusion = (float**)calloc(totalNrGest, sizeof(float*));
+    for (int i = 0; i < totalNrGest; i++){
+        confusion[i] = (float*)calloc(totalNrGest,sizeof(float));
         for (int j = 0; j < totalNrGest; j++)
             confusion[i][j] = 0.f;
+    }
 
+    gvf = _gvf;
     gvf->spreadParticles(mpvrs, rpvrs);
 
     int currentGest = 0;
@@ -192,8 +209,10 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
         int indicator = (int) data.at(j).at(4);
         if (indicator == 0) {
             if (currentGest > 0) {
-                int index = getClassifiedGesture(nr);
-                confusion[currentGest - 1][gestureSet[index] - 1] += 1;
+                if (everySample) {
+                    int index = getClassifiedGesture(nr);
+                    confusion[currentGest - 1][gestureSet[index] - 1] += 1;
+                }
                 inferSample(data, j);
             }
         } else {
@@ -218,29 +237,29 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     }
 
     // Printf gvf stuff
-    for (int i = 0; i < totalNrGest; i++) {
-        //         normalize confusion matrix
-        if (contains(gestureSet, i + 1)) {
-            float rowTotal = 0.0;
-            for (int j = 0; j < totalNrGest; j++) {
-                rowTotal += confusion[i][j];
+        for (int i = 0; i < totalNrGest; i++) {
+            //         normalize confusion matrix
+            if (contains(gestureSet, i + 1)) {
+                float rowTotal = 0.0;
+                for (int j = 0; j < totalNrGest; j++) {
+                    rowTotal += confusion[i][j];
+                }
+                for (int j = 0; j < totalNrGest; j++) {
+                    if (rowTotal > 0)
+                        confusion[i][j] /= rowTotal;
+                } // print confusion matrix
+                printf("\n");
+                for (int j = 0; j < gestureSet.size(); j++) {
+                    printf("%.2f ", confusion[i][gestureSet[j] - 1]);
+                }
+                printf("\n");
             }
-            for (int j = 0; j < totalNrGest; j++) {
-                if (rowTotal > 0)
-                    confusion[i][j] /= rowTotal;
-            } // print confusion matrix
-            printf("\n");
-            for (int j = 0; j < gestureSet.size(); j++) {
-                printf("%.2f ", confusion[i][gestureSet[j] - 1]);
-            }
-            printf("\n");
-        }
 
-    }
-    printf("\n");
+        }
+        printf("\n");
 
     // get average of diagonal for performance
-    float sum = 0.0f;
+    sum = 0.0f;
     for (int i = 0; i < totalNrGest; i++) {
         if (contains(gestureSet, i + 1));
         sum += confusion[i][i];
@@ -248,37 +267,7 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* gvf, vector<
     sum /= (float) nr;
     printf("performance = %.3f \n\n", sum);
 
-    // write results to file
-    FILE* f;
-    do {
-        f = fopen(outputFilename.c_str(), "a");
-    } while (!f);
-    out.open(outputFilename.c_str(), fstream::out | fstream::app);
-    out << "\"" << filename << "\"" << ";";
-    out << gestNumber << ";";
-    out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum;
-
-    out << ";" << numberOfParticles << ";" << resmapleThreshold << ";" << pdim << ";" << icov << ";";
-    out << alpha << ";" << multiplier << ";";
-    out << spreadMeanPos << ";" << spreadMeanVel << ";" << spreadMeanSca << ";" << spreadMeanOff << ";" << spreadMeanRot << ";";
-    out << spreadRangePos << ";" << spreadRangeVel << ";" << spreadRangeSca << ";" << spreadRangeOff << ";" << spreadRangeRot << ";";
-    out << sigPos << ";" << sigVel << ";" << sigSca << ";" << sigOff << ";" << sigRot << ";" << sum;
-
-    for (int i = 0; i < totalNrGest; i++) {
-        if (contains(gestureSet, i + 1))
-            out << ";" << 1;
-        else
-            out << ";" << 0;
-    }
-    for (int i = 0; i < totalNrGest; i++) {
-        for (int j = 0; j < totalNrGest; j++) {
-            out << ";" << confusion[i][j];
-        }
-    }
-    out << "\n";
-    out.close();
-    fclose(f);
-
+    writeResults(gestureSet);
     return sum;
 }
 
@@ -599,5 +588,38 @@ void GestureSetEvaluation::setTo(int t) {
     to = t;
 }
 
+void GestureSetEvaluation::writeResults(vector<int> gestureSet){
+    
+    // write results to file
+    FILE* f;
+    do {
+        f = fopen(outputFilename.c_str(), "a");
+    } while (!f);
+    out.open(outputFilename.c_str(), fstream::out | fstream::app);
+    out << "\"" << filename << "\"" << ";";
+    out << gestNumber << ";";
+    out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum;
 
+    out << ";" << numberOfParticles << ";" << resmapleThreshold << ";" << pdim << ";" << icov << ";";
+    out << alpha << ";" << multiplier << ";";
+    out << spreadMeanPos << ";" << spreadMeanVel << ";" << spreadMeanSca << ";" << spreadMeanOff << ";" << spreadMeanRot << ";";
+    out << spreadRangePos << ";" << spreadRangeVel << ";" << spreadRangeSca << ";" << spreadRangeOff << ";" << spreadRangeRot << ";";
+    out << sigPos << ";" << sigVel << ";" << sigSca << ";" << sigOff << ";" << sigRot << ";" << sum;
+
+    for (int i = 0; i < totalNrGest; i++) {
+        if (contains(gestureSet, i + 1))
+            out << ";" << 1;
+        else
+            out << ";" << 0;
+    }
+    for (int i = 0; i < totalNrGest; i++) {
+        for (int j = 0; j < totalNrGest; j++) {
+            out << ";" << confusion[i][j];
+        }
+    }
+    out << "\n";
+    out.close();
+    fclose(f);
+
+}
 

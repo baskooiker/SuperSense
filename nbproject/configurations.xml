@@ -77,9 +77,6 @@
     <itemPath>../YIN/YIN.h</itemPath>
   </logicalFolder>
   <sourceRootList>
-    <Elem>../../../gvf-master/src</Elem>
-    <Elem>../yin</Elem>
-    <Elem>../utils</Elem>
     <Elem>../lbimproved</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
