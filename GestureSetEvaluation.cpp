@@ -105,6 +105,8 @@ void GestureSetEvaluation::initValues() {
     to = -1;
     
     everySample = false;
+    
+    classifierType = "gvf";
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -598,7 +600,7 @@ void GestureSetEvaluation::writeResults(vector<int> gestureSet){
     out.open(outputFilename.c_str(), fstream::out | fstream::app);
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";
-    out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum;
+    out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum << ";" << classifierType;
 
     out << ";" << numberOfParticles << ";" << resmapleThreshold << ";" << pdim << ";" << icov << ";";
     out << alpha << ";" << multiplier << ";";

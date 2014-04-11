@@ -111,6 +111,8 @@ protected:
     float** confusion;
     
     float sum;
+    
+    string classifierType;
 };
 
 #endif	/* GESTURESETEVALUATION_H */

@@ -24,6 +24,7 @@ public:
 
     DTWNNTester() {
         initValues();
+        classifierType = "dtw";
     }
 
     DTWNNTester(const DTWNNTester& orig) {
@@ -87,11 +88,6 @@ public:
 
         vector<int> gests = gesturesInData(loadData2(filenames[0], 50., 1.));
 
-        //                printf("gests.size() = %d\n", gests.size());
-        //                for(int i = 0; i < gests.size(); i++)
-        //                    printf("%d ", gests[i]);
-        //                printf("\n");
-
         // init confusion matrix
         confusion = (float**) calloc(totalNrGest, sizeof (float*));
         for (int i = 0; i < totalNrGest; i++)
@@ -99,6 +95,7 @@ public:
 
 
         for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
+            printf("iter %d\n", gestIt);
             skip = gestIt;
             vector<VectorDTW> dtwBank;
             for (int i = 0; i < templates.size(); i++) {
