@@ -55,8 +55,6 @@
       </logicalFolder>
       <itemPath>../utils/AlphaFilter.cpp</itemPath>
       <itemPath>../utils/AlphaFilter.h</itemPath>
-      <itemPath>../utils/HistogramBuffer.cpp</itemPath>
-      <itemPath>../utils/HistogramBuffer.h</itemPath>
       <itemPath>../utils/Makefile</itemPath>
       <itemPath>../utils/m_pd.h</itemPath>
       <itemPath>../utils/utils.cpp</itemPath>
@@ -84,7 +82,7 @@
     <conf name="Debug" type="1">
       <toolsSet>
         <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
-        <compilerSet>MinGW|MinGW</compilerSet>
+        <compilerSet>MinGW_TDM|MinGW_TDM</compilerSet>
         <dependencyChecking>true</dependencyChecking>
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
@@ -108,7 +106,6 @@
           <linkerAddLib>
             <pElem>../../../gvf-master/src</pElem>
             <pElem>../../../gvf-master/Eigen</pElem>
-            <pElem>../utils</pElem>
             <pElem>../YIN</pElem>
           </linkerAddLib>
           <linkerLibItems>
@@ -184,10 +181,6 @@
       <item path="../utils/AlphaFilter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../utils/AlphaFilter.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../utils/HistogramBuffer.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../utils/HistogramBuffer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../utils/Makefile" ex="false" tool="3" flavor2="0">
       </item>
@@ -317,10 +310,6 @@
       <item path="../utils/AlphaFilter.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../utils/AlphaFilter.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../utils/HistogramBuffer.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../utils/HistogramBuffer.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../utils/Makefile" ex="false" tool="3" flavor2="0">
       </item>

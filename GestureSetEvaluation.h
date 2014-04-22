@@ -34,6 +34,7 @@ public:
     void setSkip(int t);
     void setTo(int t);
     void setFrom(int t);
+    void printConfusion();
 
     bool everySample;
 
@@ -46,7 +47,7 @@ protected:
     int getClassifiedGesture(int nr);
     void inferSample(vector<vector<float> > data, int j);
     void initValues();
-    void writeResults(vector<int> gests);
+    void writeResults();
 
     void setSigs();
 
@@ -113,6 +114,9 @@ protected:
     float sum;
     
     string classifierType;
+    string trainFilename;
+    
+    vector<int> gestureSet;
 };
 
 #endif	/* GESTURESETEVALUATION_H */

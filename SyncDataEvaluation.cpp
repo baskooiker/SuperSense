@@ -17,6 +17,8 @@
 
 using namespace std;
 
+const int nrOfRuns = 7;
+
 SyncDataEvaluation::SyncDataEvaluation(vector<string> fn) {
     initValues();
     filenames = fn;
@@ -95,8 +97,6 @@ void SyncDataEvaluation::evaluate() {
         //
         //        float perf = syncTestProcedure(data);
 
-        int nrOfRuns = 7;
-
         for (int j = 0; j < nrOfRuns; j++) {
             printf("%s, run %d of %d\n", filenames[i].c_str(), j, nrOfRuns);
             gvf = trainClassifier(data, gests, j);
@@ -109,28 +109,43 @@ void SyncDataEvaluation::evaluate() {
 }
 
 void SyncDataEvaluation::evaluateOnFirst() {
-    int nrOfRuns = 7;
 
     for (int iter = 0; iter < nrOfRuns; iter++) {
-
-        vector<vector<float> > data = loadData2(filenames[0]);
+        trainFilename = filenames[0];
+        vector<vector<float> > data = loadData2(trainFilename);
         vector<int> gests = gesturesInData(data);
         gvf = trainClassifier(data, gests, iter);
 
         for (int i = filenames.size() - 1; i >= 0; i--) {
             filename = filenames[i];
-            printf("iteration %d pre\n", i);
-
-            printf("iteration start %d\n", i);
             data.clear();
-            data = loadData2(filenames[i], 50., 1.);
-            printf("iteration load %d\n", i);
+            data = loadData2(filenames[i]);
             gests = gesturesInData(data);
-            printf("iteration gests %d\n", i);
             testProcedure(gvf, data, gests);
-            printf("iteration %d done\n", i);
-
             data.clear();
+        }
+    }
+}
+
+void SyncDataEvaluation::evaluateAllFiles() {
+
+    for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
+        trainFilename = filenames[trainFileNr];
+        for (int iter = 0; iter < nrOfRuns; iter++) {
+            
+            vector<vector<float> > data = loadData2(filenames[trainFileNr]);
+            vector<int> gests = gesturesInData(data);
+            gvf = trainClassifier(data, gests, iter);
+
+            for (int i = filenames.size() - 1; i >= 0; i--) {
+                filename = filenames[i];
+                data.clear();
+                data = loadData2(filenames[i]);
+                gests = gesturesInData(data);
+                testProcedure(gvf, data, gests);
+
+                data.clear();
+            }
         }
     }
 }

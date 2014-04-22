@@ -21,7 +21,7 @@ FC=gfortran
 AS=as
 
 # Macros
-CND_PLATFORM=MinGW-Windows
+CND_PLATFORM=MinGW_TDM-Windows
 CND_DLIB_EXT=dll
 CND_CONF=Debug
 CND_DISTDIR=dist
@@ -41,7 +41,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1786399364/test_mp.o \
 	${OBJECTDIR}/_ext/1360910959/YIN.o \
 	${OBJECTDIR}/_ext/2102424670/AlphaFilter.o \
-	${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o \
 	${OBJECTDIR}/_ext/2102424670/utils.o \
 	${OBJECTDIR}/DataChecker.o \
 	${OBJECTDIR}/GVFTester.o \
@@ -65,7 +64,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L../../../gvf-master/src -L../../../gvf-master/Eigen -L../utils -L../YIN -L../utils/dist/Debug/MinGW-Windows -lutils
+LDLIBSOPTIONS=-L../../../gvf-master/src -L../../../gvf-master/Eigen -L../YIN -L../utils/dist/Debug/MinGW-Windows -lutils
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -106,11 +105,6 @@ ${OBJECTDIR}/_ext/2102424670/AlphaFilter.o: ../utils/AlphaFilter.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/2102424670/AlphaFilter.o ../utils/AlphaFilter.cpp
-
-${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o: ../utils/HistogramBuffer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/2102424670/HistogramBuffer.o ../utils/HistogramBuffer.cpp
 
 ${OBJECTDIR}/_ext/2102424670/utils.o: ../utils/utils.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/2102424670

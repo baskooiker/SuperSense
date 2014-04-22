@@ -11,6 +11,7 @@
 #include <string>
 #include "init.h"
 #include <fstream>
+#include <windows.h>
 
 using namespace std;
 
@@ -103,10 +104,11 @@ void GestureSetEvaluation::initValues() {
 
     from = -1;
     to = -1;
-    
+
     everySample = false;
-    
+
     classifierType = "gvf";
+    trainFilename = "";
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -189,13 +191,14 @@ void GestureSetEvaluation::inferSample(vector<vector<float> > data, int j) {
     gvf->infer(newSample);
 }
 
-float GestureSetEvaluation::testProcedure(GestureVariationFollower* _gvf, vector<vector<float> > data, vector<int> gestureSet) {
+float GestureSetEvaluation::testProcedure(GestureVariationFollower* _gvf, vector<vector<float> > data, vector<int> gests) {
+    gestureSet = gests;
     int nr = gestureSet.size();
-//    float confusion[totalNrGest][totalNrGest];
-//    confusion = float[totalNrGest][totalNrGest];
-    confusion = (float**)calloc(totalNrGest, sizeof(float*));
-    for (int i = 0; i < totalNrGest; i++){
-        confusion[i] = (float*)calloc(totalNrGest,sizeof(float));
+    //    float confusion[totalNrGest][totalNrGest];
+    //    confusion = float[totalNrGest][totalNrGest];
+    confusion = (float**) calloc(totalNrGest, sizeof (float*));
+    for (int i = 0; i < totalNrGest; i++) {
+        confusion[i] = (float*) calloc(totalNrGest, sizeof (float));
         for (int j = 0; j < totalNrGest; j++)
             confusion[i][j] = 0.f;
     }
@@ -239,26 +242,26 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* _gvf, vector
     }
 
     // Printf gvf stuff
-        for (int i = 0; i < totalNrGest; i++) {
-            //         normalize confusion matrix
-            if (contains(gestureSet, i + 1)) {
-                float rowTotal = 0.0;
-                for (int j = 0; j < totalNrGest; j++) {
-                    rowTotal += confusion[i][j];
-                }
-                for (int j = 0; j < totalNrGest; j++) {
-                    if (rowTotal > 0)
-                        confusion[i][j] /= rowTotal;
-                } // print confusion matrix
-                printf("\n");
-                for (int j = 0; j < gestureSet.size(); j++) {
-                    printf("%.2f ", confusion[i][gestureSet[j] - 1]);
-                }
-                printf("\n");
+    for (int i = 0; i < totalNrGest; i++) {
+        //         normalize confusion matrix
+        if (contains(gestureSet, i + 1)) {
+            float rowTotal = 0.0;
+            for (int j = 0; j < totalNrGest; j++) {
+                rowTotal += confusion[i][j];
             }
-
+            for (int j = 0; j < totalNrGest; j++) {
+                if (rowTotal > 0)
+                    confusion[i][j] /= rowTotal;
+            } // print confusion matrix
+            printf("\n");
+            for (int j = 0; j < gestureSet.size(); j++) {
+                printf("%.2f ", confusion[i][gestureSet[j] - 1]);
+            }
+            printf("\n");
         }
-        printf("\n");
+
+    }
+    printf("\n");
 
     // get average of diagonal for performance
     sum = 0.0f;
@@ -269,7 +272,12 @@ float GestureSetEvaluation::testProcedure(GestureVariationFollower* _gvf, vector
     sum /= (float) nr;
     printf("performance = %.3f \n\n", sum);
 
-    writeResults(gestureSet);
+    writeResults();
+
+    for (int i = 0; i < totalNrGest; i++)
+        delete[] confusion[i];
+    delete[] confusion;
+
     return sum;
 }
 
@@ -590,17 +598,18 @@ void GestureSetEvaluation::setTo(int t) {
     to = t;
 }
 
-void GestureSetEvaluation::writeResults(vector<int> gestureSet){
-    
+void GestureSetEvaluation::writeResults() {
+
     // write results to file
     FILE* f;
     do {
         f = fopen(outputFilename.c_str(), "a");
+        Sleep(10);
     } while (!f);
     out.open(outputFilename.c_str(), fstream::out | fstream::app);
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";
-    out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum << ";" << classifierType;
+    out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum << ";" << classifierType << ";" << trainFilename;
 
     out << ";" << numberOfParticles << ";" << resmapleThreshold << ";" << pdim << ";" << icov << ";";
     out << alpha << ";" << multiplier << ";";
@@ -625,3 +634,37 @@ void GestureSetEvaluation::writeResults(vector<int> gestureSet){
 
 }
 
+void GestureSetEvaluation::printConfusion() {
+
+    // Printf confusion
+    for (int i = 0; i < totalNrGest; i++) {
+        if (contains(gestureSet, i)) {
+            float rowTotal = 0.f;
+            for (int j = 0; j < totalNrGest; j++) {
+                rowTotal += confusion[i][j];
+            }
+            for (int j = 0; j < totalNrGest; j++) {
+                if (rowTotal > 0.f)
+                    confusion[i][j] /= rowTotal;
+            }
+            // print confusion matrix
+            printf("\n");
+            for (int j = 0; j < totalNrGest; j++) {
+                if (contains(gestureSet, j))
+                    printf("%.2f ", confusion[i][j]);
+            }
+            printf("\n");
+        }
+    }
+
+    printf("\n");
+
+    // get average of diagonal for performance
+    sum = 0.f;
+    for (int i = 0; i < totalNrGest; i++) {
+        sum += confusion[i][i];
+    }
+    sum /= (float) totalNrGest;
+    printf("performance = %.3f \n\n", sum);
+
+}

@@ -24,6 +24,7 @@ public:
     void evaluate();
     void optimizeGVFParameters();
     void evaluateOnFirst();
+    void evaluateAllFiles();
     
 protected:
     YIN* yin;
