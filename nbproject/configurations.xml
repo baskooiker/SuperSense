@@ -9,6 +9,7 @@
       <itemPath>GVFTester.h</itemPath>
       <itemPath>GestureSetEvaluation.h</itemPath>
       <itemPath>SyncDataEvaluation.h</itemPath>
+      <itemPath>YINTester.h</itemPath>
       <itemPath>../../../gvf-master/src/features.h</itemPath>
       <itemPath>../../../gvf-master/src/init.h</itemPath>
       <itemPath>../../../gvf-master/src/test_gesture_set.h</itemPath>
@@ -31,7 +32,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>DataChecker.cpp</itemPath>
-      <itemPath>GVFTester.cpp</itemPath>
       <itemPath>GestureSetEvaluation.cpp</itemPath>
       <itemPath>SyncDataEvaluation.cpp</itemPath>
       <itemPath>features.cpp</itemPath>
@@ -84,7 +84,7 @@
         <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
         <compilerSet>MinGW_TDM|MinGW_TDM</compilerSet>
         <dependencyChecking>true</dependencyChecking>
-        <rebuildPropChanged>false</rebuildPropChanged>
+        <rebuildPropChanged>true</rebuildPropChanged>
       </toolsSet>
       <compileType>
         <cTool>
@@ -196,8 +196,6 @@
       </item>
       <item path="DataChecker.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="GVFTester.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GestureSetEvaluation.cpp" ex="false" tool="1" flavor2="0">
@@ -207,6 +205,8 @@
       <item path="SyncDataEvaluation.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SyncDataEvaluation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="YINTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="features.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -325,8 +325,6 @@
       </item>
       <item path="DataChecker.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="GVFTester.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GestureSetEvaluation.cpp" ex="false" tool="1" flavor2="0">
@@ -336,6 +334,8 @@
       <item path="SyncDataEvaluation.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="SyncDataEvaluation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="YINTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="features.cpp" ex="false" tool="1" flavor2="0">
       </item>

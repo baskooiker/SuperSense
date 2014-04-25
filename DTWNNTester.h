@@ -17,6 +17,8 @@
 #include <float.h>
 #include <map>
 #include <windows.h>
+#include <algorithm>
+#include "init.h"
 
 using namespace std;
 
@@ -84,17 +86,39 @@ public:
         printf("Done\n");
     }
 
-    void evaluateOnFirst(vector<string> filenames, int trainFile = 0) {
+    void shiftTemplates(map<int, vector<vector<Point> > >* templates, float shift) {
+        shift = (float) min(1., max(0., (double) shift));
+        for (std::map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+            int shiftAmount = (int) (it->second[0].size() * shift);
+            for (int i = 0; i < it->second.size() - 1; i++) {
+                if (shiftAmount > 0)
+                    it->second[i].erase(it->second[i].begin(), it->second[i].begin() + shiftAmount);
+
+                for (int j = shiftAmount; j > 0; j--)
+                    it->second[i].push_back(it->second[i + 1][it->second[i + 1].size() - 1 - j]);
+
+            }
+            if (shiftAmount > 0) {
+                it->second.pop_back();
+            }
+        }
+        // print
+        //        for (std::map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+        //            printf("gesture %d\n", it->first);
+        //            for (int i = 0; i < it->second.size(); i++) {
+        //                printf("length = %d\n", it->second[i].size());
+        //            }
+        //            printf("\n");
+        //        }
+    }
+
+    void evaluateOnFirst(const vector<string> &filenames, int trainFile = 0) {
         map<int, vector<vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
-        vector<vector<float> > data = loadData2(filenames[trainFile]);
-        gestureSet = gesturesInData(data);
+        shiftTemplates(templates, shift);
 
         trainFilename = filenames[trainFile];
 
-        // init confusion matrix
-        confusion = (float**) calloc(totalNrGest, sizeof (float*));
-        for (int i = 0; i < totalNrGest; i++)
-            confusion[i] = (float*) calloc(totalNrGest, sizeof (float));
+        initConfusion();
 
         for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
             printf("iter %d\n", gestIt);
@@ -106,10 +130,7 @@ public:
             for (int i = 0; i < filenames.size(); i++) {
                 filename = filenames[i];
 
-                // reset confusion matrix
-                for (int i = 0; i < totalNrGest; i++)
-                    for (int j = 0; j < totalNrGest; j++)
-                        confusion[i][j] = 0.f;
+                initConfusion();
 
                 map<int, vector<vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
                 for (int j = 0; j < NROFTRIALS; j++) {
@@ -118,29 +139,40 @@ public:
                         double minVal = DBL_MAX;
                         for (int k = 0; k < gestureSet.size(); k++) {
                             double d = dtwBank[k].fastdynamic(templates->at(gestureSet[k])[gestIt], trials->at(gestureSet[l])[j]);
-                            //                            printf("%f %d %d\n", d, templates[gests[k]][gestIt].size(), trials[gests[l]][j].size());
-                            //                            printf("%f %d %d %d\n", d, k,gests[k],gestIt);
                             if (d < minVal) {
                                 minVal = d;
                                 minIndex = k;
                             }
                         }
-                        confusion[gestureSet[l]][gestureSet[minIndex]] += 1;
+                        confusion[gestureSet[l] - 1][gestureSet[minIndex] - 1] += 1.0;
                     }
                 }
                 printConfusion();
                 writeResults();
+
+                for (map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+                    for (int i = 0; i < it->second.size(); i++)
+                        it->second[i].clear();
+                    it->second.clear();
+                }
                 trials->clear();
+                delete trials;
+
             }
             dtwBank.clear();
         }
+        freeConfusion();
+
+        for (map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+            for (int i = 0; i < it->second.size(); i++)
+                it->second[i].clear();
+            it->second.clear();
+        }
         templates->clear();
-        for (int i = 0; i < totalNrGest; i++)
-            delete[] confusion[i];
-        delete[] confusion;
+        delete templates;
     }
 
-    void evaluateAllFiles(vector<string> filenames) {
+    void evaluateAllFiles(const vector<string> &filenames) {
         for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
             printf("TrainfileNr = %d\n", trainFileNr);
             trainFilename = filenames[trainFileNr];
@@ -148,7 +180,7 @@ public:
         }
     }
 
-private:
+protected:
 
     vector<vector<vector<Point> > > createTemplates(string filename) {
         vector<vector<vector<Point> > > trials;
@@ -194,40 +226,36 @@ private:
         return trials;
     }
 
-    map<int, vector<vector<Point> > >* createAnotatedTemplates(string filename, int skip = 0) {
+    map<int, vector<vector<Point> > >* createAnotatedTemplates(string filename) {
         map<int, vector<vector<Point> > >* trials = new map<int, vector<vector<Point> > >();
 
         vector<vector<float> > data = loadData2(filename);
+        gestureSet = gesturesInData(data);
 
         bool inTrial = false;
         int trialNr = -1;
+
         // push samples in trials in gestures in gesture set
         for (int sampleNr = 0; sampleNr < data.size(); sampleNr++) {
             vector<float> sample = data[sampleNr];
-            bool newTrial = (int) sample[4] == 1;
+            bool newTrial = (int) data[sampleNr][4] == 1;
             int sampleGest = (int) sample[3];
             Point p = Point(sample[0], sample[1], sample[2]);
             if (inTrial) {
                 if (newTrial) {
                     if (++trialNr < NROFTRIALS) {
-                        printf("new trial\n");
-                        printf("%f %f %f\n", p.x, p.y, p.z);
                         trials->at(sampleGest).push_back(vector<Point>());
                         trials->at(sampleGest)[trials->at(sampleGest).size() - 1].push_back(p);
                     } else {
                         inTrial = false;
                     }
                 } else {
-                    printf("%f %f %f\n", p.x, p.y, p.z);
                     trials->at(sampleGest)[trials->at(sampleGest).size() - 1].push_back(p);
                 }
             } else {
                 if (newTrial) {
                     trialNr = 0;
                     inTrial = true;
-                    printf("new gesture %d\n", sampleGest);
-                    printf("new trial\n");
-                    printf("%f %f %f\n", p.x, p.y, p.z);
                     trials->insert(std::make_pair(sampleGest, vector<vector<Point> >()));
                     trials->at(sampleGest).push_back(vector<Point>());
                     trials->at(sampleGest)[trials->at(sampleGest).size() - 1].push_back(p);
@@ -235,13 +263,20 @@ private:
             }
         }
 
-        // if skip != 0, remove last trial for every gesture
-        if (skip > 0) {
-            vector<int> gests = gesturesInData(data);
-            for (int i = 0; i < gests.size(); i++) {
-                trials->at(gests[i]).erase(trials->at(gests[i]).end());
-            }
+        // print
+        //        for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+        //            printf("gesture %d\n", it->first);
+        //            for (int i = 0; i < it->second.size(); i++) {
+        //                printf("length = %d\n", it->second[i].size());
+        //            }
+        //            printf("\n");
+        //        }
+
+        for(int i = 0; i < data.size(); i++){
+            data[i].clear();
         }
+        data.clear();
+        
         return trials;
     }
 

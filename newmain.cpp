@@ -10,6 +10,8 @@
 #include "GestureSetEvaluation.h"
 #include "DataChecker.h"
 #include "DTWNNTester.h"
+#include "GVFTester.h"
+#include "YINTester.h"
 
 #include <string>
 #include <vector>
@@ -32,7 +34,7 @@ void threadOne(void* arg) {
 //    filenames.push_back("data/maki_1.dat");
 
     DTWNNTester dtw = DTWNNTester();
-    dtw.setOutputFilename("results/rotationlien3.csv");
+    dtw.setOutputFilename("results/rotationlien2.csv");
     dtw.setTotalNrGest(20);
     dtw.evaluateAllFiles(filenames);
     
@@ -45,15 +47,26 @@ void threadOne(void* arg) {
 }
 
 void threadTwo(void* arg) {
-    vector<string> filenames;
+    std::vector<string> filenames;
 
-    filenames.push_back("data/lienfree_1.dat");
-    filenames.push_back("data/lienfree_2.dat");
-    filenames.push_back("data/lienfree_3.dat");
+//    filenames.push_back("data/maki_0.dat");
+//    filenames.push_back("data/maki_45.dat");
+//    filenames.push_back("data/maki_90.dat");
+//    filenames.push_back("data/lienfree_1.dat");
+//    filenames.push_back("data/lienfree_2.dat");
+//    filenames.push_back("data/lienfree_3.dat");
 
-    DTWNNTester dtw = DTWNNTester();
-    dtw.setOutputFilename("results/lienfree3.csv");
-    dtw.setTotalNrGest(4);
+    filenames.push_back("data/maki_0.dat");
+    filenames.push_back("data/lien_0.dat");
+    filenames.push_back("data/nico_0.dat");
+    filenames.push_back("data/leonie_0.dat");
+    filenames.push_back("data/jan_0.dat");
+    filenames.push_back("data/suzanne_0.dat");
+    
+//    DTWNNTester dtw = DTWNNTester();
+    YINTester dtw = YINTester();
+//    dtw.setOutputFilename("results/shifttest.csv");
+//    dtw.setTotalNrGest(4);
     dtw.evaluateAllFiles(filenames);
     return;
     
@@ -89,22 +102,14 @@ void threadThree(void* arg) {
  * 
  */
 int main(int argc, char** argv) {
-//    vector<string> filenames;
-//    filenames.push_back("data/lien_0.dat");
-//    filenames.push_back("data/lien_45.dat");
-//    filenames.push_back("data/lien_90.dat");
-//    DataChecker dc = DataChecker();
-//    if(!dc.checkCorrectness(filenames))
-//        return -1;
-//    return 1;
     
     HANDLE handles[2];
-    handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);
-//    handles[1] = (HANDLE) _beginthread(threadTwo, 0, (void*) 1);
+//    handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);
+    handles[1] = (HANDLE) _beginthread(threadTwo, 0, (void*) 1);
     //        handles[2] = (HANDLE) _beginthread(threadThree, 0, (void*) 2);
 
-    WaitForSingleObject(handles[0], INFINITE);
-//    WaitForSingleObject(handles[1], INFINITE);
+//    WaitForSingleObject(handles[0], INFINITE);
+    WaitForSingleObject(handles[1], INFINITE);
     //        WaitForSingleObject(handles[2], INFINITE);
 
     return 0;

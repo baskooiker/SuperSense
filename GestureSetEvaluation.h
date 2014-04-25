@@ -63,7 +63,9 @@ protected:
     vector<int> newSet(int i, int j, int k, int l, int m, int n, int o);
     void addPairs(vector<vector<int> >* pairs, vector<int> pair);
     vector<vector<int> > getBestPairsExtended();
-    vector<int> gesturesInData(vector<vector<float> > data);
+    vector<int> gesturesInData(const vector<vector<float> > &data);
+    void initConfusion();
+    void freeConfusion();
 
     Eigen::VectorXf mpvrs;
     Eigen::VectorXf rpvrs;
@@ -115,6 +117,8 @@ protected:
     
     string classifierType;
     string trainFilename;
+    
+    float shift;
     
     vector<int> gestureSet;
 };

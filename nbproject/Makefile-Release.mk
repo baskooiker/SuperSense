@@ -43,7 +43,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/2102424670/AlphaFilter.o \
 	${OBJECTDIR}/_ext/2102424670/utils.o \
 	${OBJECTDIR}/DataChecker.o \
-	${OBJECTDIR}/GVFTester.o \
 	${OBJECTDIR}/GestureSetEvaluation.o \
 	${OBJECTDIR}/SyncDataEvaluation.o \
 	${OBJECTDIR}/features.o \
@@ -113,11 +112,6 @@ ${OBJECTDIR}/DataChecker.o: DataChecker.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/DataChecker.o DataChecker.cpp
-
-${OBJECTDIR}/GVFTester.o: GVFTester.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/GVFTester.o GVFTester.cpp
 
 ${OBJECTDIR}/GestureSetEvaluation.o: GestureSetEvaluation.cpp 
 	${MKDIR} -p ${OBJECTDIR}

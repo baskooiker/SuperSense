@@ -2,64 +2,158 @@
  * File:   GVFTester.h
  * Author: Bas
  *
- * Created on 24 februari 2014, 11:42
+ * Created on 22 april 2014, 14:44
  */
 
 #ifndef GVFTESTER_H
 #define	GVFTESTER_H
 
 #include <vector>
-#include "../yin/YIN.h"
-#include <fstream>
-#include "GestureVariationFollower.h"
+#include <string>
+#include <cfloat>
 
-using namespace std;
+#include "GestureSetEvaluation.h"
 
-class GVFTester {
+class GVFTester : public DTWNNTester {
 public:
-    GVFTester();
-    GVFTester(const GVFTester& orig);
-    virtual ~GVFTester();
-    void testProcedure(string filename, ofstream& resultsOut);
-    int test_sync(string filename);
-    void trainGesturesById(GestureVariationFollower* gvf, vector<vector<float> > data, int nrGestures);
-    
-    vector <vector <float> > data;
-    int nr;
 
-    YIN* yin;
+    GVFTester() {
+        initValues();
+        classifierType = "gvf";
+    }
 
-    int pdim;
+    GVFTester(const DTWNNTester& orig) {
 
-    float spreadMeanPos;
-    float spreadMeanVel;
-    float spreadMeanSca;
-    float spreadMeanOff;
-    float spreadMeanRot;
+    }
 
-    float spreadRangePos;
-    float spreadRangeVel;
-    float spreadRangeSca;
-    float spreadRangeOff;
-    float spreadRangeRot;
+    virtual ~GVFTester() {
 
-    float sigPos;
-    float sigVel;
-    float sigSca;
-    float sigOff;
-    float sigRot;
+    }
 
-    int resmapleThreshold;
-    int numberOfParticles;
+    void evaluateAllFiles(const std::vector<std::string> &filenames) {
+        for (shift = .2; shift < .9; shift += .2) {
+            for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
+                printf("TrainfileNr = %d\n", trainFileNr);
+                trainFilename = filenames[trainFileNr];
+                evaluateOnFirst(filenames, trainFileNr);
+            }
+        }
+    }
 
-    float icov;
+protected:
 
-private:
-    vector<int> gestureVec;
-    
-    bool contains(vector<int> vec, int val);
-    vector<int> gestureIndices(vector <vector <float> > data);
+    GestureVariationFollower* trainGVF(std::map<int, std::vector<std::vector<Point> > >* templates, std::vector<int> gs, int skip) {
+        gestNumber = skip;
+        //        delete gvf;
+
+        pdim = 8;
+
+        sigs = Eigen::VectorXf(pdim);
+        sigs << sigPos, sigVel, sigSca, sigSca, sigSca, sigRot, sigRot, sigRot;
+
+        mpvrs = Eigen::VectorXf(pdim);
+        mpvrs << spreadMeanPos, spreadMeanVel, spreadMeanSca, spreadMeanSca, spreadMeanSca, spreadMeanRot, spreadMeanRot, spreadMeanRot;
+
+        rpvrs = Eigen::VectorXf(pdim);
+        rpvrs << spreadRangePos, spreadRangeVel, spreadRangeSca, spreadRangeSca, spreadRangeSca, spreadRangeRot, spreadRangeRot, spreadRangeRot;
+
+        gvf = new GestureVariationFollower(numberOfParticles, sigs, 1. / (icov * icov), resmapleThreshold, 0.);
+
+        for (int i = 0; i < gs.size(); i++) {
+            gvf->addTemplate();
+            //            printf("size = %d\n", templates->at(gs[i])[skip].size());
+            for (int j = 0; j < templates->at(gs[i])[skip].size(); j++) {
+                std::vector<float> sample;
+                sample.push_back(templates->at(gs[i])[skip][j].x);
+                sample.push_back(templates->at(gs[i])[skip][j].y);
+                sample.push_back(templates->at(gs[i])[skip][j].z);
+                //                printf("%f %f %f \n", sample[0], sample[1], sample[2]);
+                gvf->fillTemplate(i, sample);
+            }
+            //            printf("\n");
+        }
+        //        
+        //        for(int i = 0; i < gvf->getNbOfTemplates(); i++){
+        //            printf("%d %d\n", i, gvf->getLengthOfTemplateByInd(i));
+        //        }
+
+        return gvf;
+    }
+
+    void evaluateOnFirst(const std::vector<std::string> &filenames, int trainFile = 0) {
+        std::map<int, std::vector<std::vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
+        shiftTemplates(templates, shift);
+
+        GestureVariationFollower *gvf = trainGVF(templates, gestureSet, trainFile);
+
+        trainFilename = filenames[trainFile];
+
+        initConfusion();
+
+        for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
+            printf("iter %d\n", gestIt);
+            gestNumber = gestIt;
+
+            for (int i = 0; i < filenames.size(); i++) {
+                filename = filenames[i];
+
+                initConfusion();
+
+                std::map<int, std::vector<std::vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
+                for (int j = 0; j < NROFTRIALS; j++) {
+
+                    for (int l = 0; l < gestureSet.size(); l++) {
+
+                        gvf->spreadParticles(mpvrs, rpvrs);
+                        for (int m = 0; m < trials->at(gestureSet[l])[j].size(); m++) {
+                            std::vector<float> sample;
+                            sample.push_back(trials->at(gestureSet[l])[skip][m].x);
+                            sample.push_back(trials->at(gestureSet[l])[skip][m].y);
+                            sample.push_back(trials->at(gestureSet[l])[skip][m].z);
+                            //                            printf( "%f %f %f \n", sample[0], sample[1], sample[2]);
+                            gvf->infer(sample);
+                        }
+
+                        int maxIndex = FLT_MIN;
+                        float maxVal = 0.;
+                        Eigen::VectorXf stat = gvf->getGestureConditionnalProbabilities();
+                        for (int k = 0; k < gestureSet.size(); k++) {
+                            float d = stat(k);
+                            //                            printf("%d %f\n", k, d);
+                            if (d > maxVal) {
+                                maxVal = d;
+                                maxIndex = k;
+                            }
+                        }
+
+                        confusion[gestureSet[l] - 1][gestureSet[maxIndex] - 1] += 1.0f;
+                    }
+                }
+                printConfusion();
+                writeResults();
+
+                for (std::map<int, std::vector<std::vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+                    for (int i = 0; i < it->second.size(); i++)
+                        it->second[i].clear();
+                    it->second.clear();
+                }
+                trials->clear();
+                delete trials;
+            }
+        }
+
+        freeConfusion();
+
+        for (std::map<int, std::vector<std::vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+            for (int i = 0; i < it->second.size(); i++)
+                it->second[i].clear();
+            it->second.clear();
+        }
+        templates->clear();
+        delete templates;
+        delete gvf;
+    }
+
 };
 
 #endif	/* GVFTESTER_H */
-
