@@ -13,6 +13,7 @@
 #include <cfloat>
 
 #include "GestureSetEvaluation.h"
+#include "DTWNNTester.h"
 
 class GVFTester : public DTWNNTester {
 public:
@@ -80,6 +81,77 @@ protected:
         return gvf;
     }
 
+    void testOneCase(string filename, int trialNr) {
+        std::map<int, std::vector<std::vector<Point> > >* trials = createAnotatedTemplates(filename);
+        for (int l = 0; l < gestureSet.size(); l++) {
+
+            gvf->spreadParticles(mpvrs, rpvrs);
+            for (int m = 0; m < trials->at(gestureSet[l])[skip].size(); m++) {
+                std::vector<float> sample;
+                sample.push_back(trials->at(gestureSet[l])[skip][m].x);
+                sample.push_back(trials->at(gestureSet[l])[skip][m].y);
+                sample.push_back(trials->at(gestureSet[l])[skip][m].z);
+                //                            printf( "%f %f %f \n", sample[0], sample[1], sample[2]);
+                gvf->infer(sample);
+            }
+
+            int maxIndex = FLT_MIN;
+            float maxVal = 0.;
+            Eigen::VectorXf stat = gvf->getGestureConditionnalProbabilities();
+            for (int k = 0; k < gestureSet.size(); k++) {
+                float d = stat(k);
+                //                            printf("%d %f\n", k, d);
+                if (d > maxVal) {
+                    maxVal = d;
+                    maxIndex = k;
+                }
+            }
+
+            confusion[gestureSet[l] - 1][gestureSet[maxIndex] - 1] += 1.0f;
+        }
+    }
+
+    void testOneFile(string filename) {
+        std::map<int, std::vector<std::vector<Point> > >* trials = createAnotatedTemplates(filename);
+        for (int j = 0; j < NROFTRIALS; j++) {
+
+            for (int l = 0; l < gestureSet.size(); l++) {
+
+                gvf->spreadParticles(mpvrs, rpvrs);
+                for (int m = 0; m < trials->at(gestureSet[l])[j].size(); m++) {
+                    std::vector<float> sample;
+                    sample.push_back(trials->at(gestureSet[l])[j][m].x);
+                    sample.push_back(trials->at(gestureSet[l])[j][m].y);
+                    sample.push_back(trials->at(gestureSet[l])[j][m].z);
+                    //                            printf( "%f %f %f \n", sample[0], sample[1], sample[2]);
+                    gvf->infer(sample);
+                }
+
+                int maxIndex = FLT_MIN;
+                float maxVal = 0.;
+                Eigen::VectorXf stat = gvf->getGestureConditionnalProbabilities();
+                for (int k = 0; k < gestureSet.size(); k++) {
+                    float d = stat(k);
+                    //                            printf("%d %f\n", k, d);
+                    if (d > maxVal) {
+                        maxVal = d;
+                        maxIndex = k;
+                    }
+                }
+
+                confusion[gestureSet[l] - 1][gestureSet[maxIndex] - 1] += 1.0f;
+            }
+        }
+
+        for (std::map<int, std::vector<std::vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+            for (int i = 0; i < it->second.size(); i++)
+                it->second[i].clear();
+            it->second.clear();
+        }
+        trials->clear();
+        delete trials;
+    }
+
     void evaluateOnFirst(const std::vector<std::string> &filenames, int trainFile = 0) {
         std::map<int, std::vector<std::vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
         shiftTemplates(templates, shift);
@@ -99,46 +171,11 @@ protected:
 
                 initConfusion();
 
-                std::map<int, std::vector<std::vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
-                for (int j = 0; j < NROFTRIALS; j++) {
+                testOneFile(filenames[i]);
 
-                    for (int l = 0; l < gestureSet.size(); l++) {
-
-                        gvf->spreadParticles(mpvrs, rpvrs);
-                        for (int m = 0; m < trials->at(gestureSet[l])[j].size(); m++) {
-                            std::vector<float> sample;
-                            sample.push_back(trials->at(gestureSet[l])[skip][m].x);
-                            sample.push_back(trials->at(gestureSet[l])[skip][m].y);
-                            sample.push_back(trials->at(gestureSet[l])[skip][m].z);
-                            //                            printf( "%f %f %f \n", sample[0], sample[1], sample[2]);
-                            gvf->infer(sample);
-                        }
-
-                        int maxIndex = FLT_MIN;
-                        float maxVal = 0.;
-                        Eigen::VectorXf stat = gvf->getGestureConditionnalProbabilities();
-                        for (int k = 0; k < gestureSet.size(); k++) {
-                            float d = stat(k);
-                            //                            printf("%d %f\n", k, d);
-                            if (d > maxVal) {
-                                maxVal = d;
-                                maxIndex = k;
-                            }
-                        }
-
-                        confusion[gestureSet[l] - 1][gestureSet[maxIndex] - 1] += 1.0f;
-                    }
-                }
                 printConfusion();
                 writeResults();
 
-                for (std::map<int, std::vector<std::vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
-                    for (int i = 0; i < it->second.size(); i++)
-                        it->second[i].clear();
-                    it->second.clear();
-                }
-                trials->clear();
-                delete trials;
             }
         }
 

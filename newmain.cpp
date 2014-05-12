@@ -5,13 +5,13 @@
  * Created on 13 januari 2014, 14:13
  */
 
-//#include "GVFTester.h"
 #include "SyncDataEvaluation.h"
 #include "GestureSetEvaluation.h"
 #include "DataChecker.h"
 #include "DTWNNTester.h"
 #include "GVFTester.h"
 #include "YINTester.h"
+#include "FeatureCalculator.h"
 
 #include <string>
 #include <vector>
@@ -98,10 +98,47 @@ void threadThree(void* arg) {
     sde2.evaluate();
 }
 
+vector<string> freeFiles(){
+    vector<string> filenames;
+    
+    filenames.push_back("data/danfree_1.dat");
+    filenames.push_back("data/danfree_2.dat");
+    filenames.push_back("data/danfree_3.dat");
+    filenames.push_back("data/janfree_1.dat");
+    filenames.push_back("data/janfree_2.dat");
+    filenames.push_back("data/janfree_3.dat");
+    filenames.push_back("data/lienfree_1.dat");
+    filenames.push_back("data/lienfree_2.dat");
+    filenames.push_back("data/lienfree_3.dat");
+    filenames.push_back("data/makifree_1.dat");
+    filenames.push_back("data/makifree_2.dat");
+    filenames.push_back("data/makifree_3.dat");
+    filenames.push_back("data/marcofree_1.dat");
+    filenames.push_back("data/marcofree_2.dat");
+    filenames.push_back("data/marcofree_3.dat");
+    filenames.push_back("data/nicofree_1.dat");
+    filenames.push_back("data/nicofree_2.dat");
+    filenames.push_back("data/nicofree_3.dat");
+    filenames.push_back("data/suzannefree_1.dat");
+    filenames.push_back("data/suzannefree_2.dat");
+    filenames.push_back("data/suzannefree_3.dat");
+    
+    return filenames;
+}
+
+void writeFeatureFile(){
+    FeatureCalculator fc = FeatureCalculator();
+    vector<string> filenames = freeFiles();
+    fc.calculateFeatures(filenames, "results/featureCalculations2.csv");
+}
+
 /*
  * 
  */
 int main(int argc, char** argv) {
+    
+    writeFeatureFile();
+    return 0;
     
     HANDLE handles[2];
 //    handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);

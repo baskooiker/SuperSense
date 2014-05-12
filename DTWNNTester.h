@@ -263,14 +263,15 @@ protected:
             }
         }
 
-        // print
-        //        for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
-        //            printf("gesture %d\n", it->first);
-        //            for (int i = 0; i < it->second.size(); i++) {
-        //                printf("length = %d\n", it->second[i].size());
-        //            }
-        //            printf("\n");
-        //        }
+//         print
+//        printf("printf~\n");
+//                for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+//                    printf("gesture %d\n", it->first);
+//                    for (int i = 0; i < it->second.size(); i++) {
+//                        printf("length = %d\n", it->second[i].size());
+//                    }
+//                    printf("\n");
+//                }
 
         for(int i = 0; i < data.size(); i++){
             data[i].clear();

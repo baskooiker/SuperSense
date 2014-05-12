@@ -34,7 +34,7 @@ public:
     void setSkip(int t);
     void setTo(int t);
     void setFrom(int t);
-    void printConfusion();
+    void printConfusion(bool print = true);
 
     bool everySample;
 
