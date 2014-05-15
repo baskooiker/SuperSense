@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>DTWExtendedTester.h</itemPath>
       <itemPath>DTWNNTester.h</itemPath>
       <itemPath>DataChecker.h</itemPath>
       <itemPath>FeatureCalculator.h</itemPath>
@@ -191,6 +192,8 @@
       </item>
       <item path="../utils/utils.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DTWExtendedTester.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="DTWNNTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
@@ -321,6 +324,8 @@
       <item path="../utils/utils.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../utils/utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DTWExtendedTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DTWNNTester.h" ex="false" tool="3" flavor2="0">
       </item>

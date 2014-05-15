@@ -40,6 +40,16 @@ public:
 
     static const int NROFTRIALS = 7;
 
+    void evaluateIndividual(const vector<string> &filenames){
+        for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
+            printf("TrainfileNr = %d\n", trainFileNr);
+            trainFilename = filenames[trainFileNr];
+            vector<string> filenameVector;
+            filenameVector.push_back(trainFilename);
+            evaluateOnFirst(filenameVector);
+        }
+    }
+    
     void evaluate(string filename) {
         vector<vector<vector<Point> > > trials = createTemplates(filename);
         printf("templates created\n");
@@ -144,6 +154,7 @@ public:
                                 minIndex = k;
                             }
                         }
+                        Sleep(1);
                         confusion[gestureSet[l] - 1][gestureSet[minIndex] - 1] += 1.0;
                     }
                 }
@@ -162,6 +173,7 @@ public:
             dtwBank.clear();
         }
         freeConfusion();
+        Sleep(1);
 
         for (map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
             for (int i = 0; i < it->second.size(); i++)

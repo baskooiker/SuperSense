@@ -12,6 +12,7 @@
 #include "GVFTester.h"
 #include "YINTester.h"
 #include "FeatureCalculator.h"
+#include "DTWExtendedTester.h"
 
 #include <string>
 #include <vector>
@@ -122,6 +123,40 @@ vector<string> freeFiles(){
     filenames.push_back("data/suzannefree_1.dat");
     filenames.push_back("data/suzannefree_2.dat");
     filenames.push_back("data/suzannefree_3.dat");
+    filenames.push_back("data/mirjamfree_1.dat");
+    filenames.push_back("data/mirjamfree_2.dat");
+    filenames.push_back("data/mirjamfree_3.dat");
+    
+    return filenames;
+}
+
+vector<string> fixedFiles(){
+    vector<string> filenames;
+    
+    filenames.push_back("data/dan_0.dat");
+    filenames.push_back("data/dan_45.dat");
+    filenames.push_back("data/dan_90.dat");
+    filenames.push_back("data/jan_0.dat");
+    filenames.push_back("data/jan_45.dat");
+    filenames.push_back("data/jan_90.dat");
+    filenames.push_back("data/lien_0.dat");
+    filenames.push_back("data/lien_45.dat");
+    filenames.push_back("data/lien_90.dat");
+    filenames.push_back("data/maki_0.dat");
+    filenames.push_back("data/maki_45.dat");
+    filenames.push_back("data/maki_90.dat");
+    filenames.push_back("data/marco_0.dat");
+    filenames.push_back("data/marco_45.dat");
+    filenames.push_back("data/marco_90.dat");
+    filenames.push_back("data/nico_0.dat");
+    filenames.push_back("data/nico_45.dat");
+    filenames.push_back("data/nico_90.dat");
+    filenames.push_back("data/suzanne_0.dat");
+    filenames.push_back("data/suzanne_45.dat");
+    filenames.push_back("data/suzanne_90.dat");
+    filenames.push_back("data/mirjam_0.dat");
+    filenames.push_back("data/mirjam_45.dat");
+    filenames.push_back("data/mirjam_90.dat");
     
     return filenames;
 }
@@ -132,12 +167,32 @@ void writeFeatureFile(){
     fc.calculateFeatures(filenames, "results/featureCalculations2.csv");
 }
 
+void testDTWExtended(){
+    vector<string> filenames = fixedFiles();
+    
+    DTWExtendedTester dtw = DTWExtendedTester();
+    dtw.setOutputFilename("results/dtwExtendedTest.csv");
+    dtw.setTotalNrGest(20);
+    dtw.evaluateIndividual(filenames);
+}
+
+void testDTWNN(){
+    vector<string> filenames = fixedFiles();
+    
+    DTWNNTester dtw = DTWNNTester();
+    dtw.setOutputFilename("results/dtwTest.csv");
+    dtw.setTotalNrGest(20);
+    dtw.evaluateIndividual(filenames);
+}
+
 /*
  * 
  */
 int main(int argc, char** argv) {
     
-    writeFeatureFile();
+//    writeFeatureFile();
+    testDTWExtended();
+//    testDTWNN();
     return 0;
     
     HANDLE handles[2];
@@ -145,6 +200,7 @@ int main(int argc, char** argv) {
     handles[1] = (HANDLE) _beginthread(threadTwo, 0, (void*) 1);
     //        handles[2] = (HANDLE) _beginthread(threadThree, 0, (void*) 2);
 
+    
 //    WaitForSingleObject(handles[0], INFINITE);
     WaitForSingleObject(handles[1], INFINITE);
     //        WaitForSingleObject(handles[2], INFINITE);
