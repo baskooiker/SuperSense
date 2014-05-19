@@ -105,11 +105,8 @@ public:
                                         }
                                     }
                                 }
-                                printf("maxD = %.2f - %d\n", minRot, minIndex);
                                 confusion[gestureSet[l] - 1][gestureSet[minIndex] - 1] += 1.0;
                             }
-
-
                         }
                     }
                     buffer.clear();
@@ -124,7 +121,6 @@ public:
                 }
                 trials->clear();
                 delete trials;
-
             }
             dtwBank.clear();
         }
