@@ -9,6 +9,7 @@
       <itemPath>DataChecker.h</itemPath>
       <itemPath>FeatureCalculator.h</itemPath>
       <itemPath>GVFTester.h</itemPath>
+      <itemPath>GestureResampler.h</itemPath>
       <itemPath>GestureSetEvaluation.h</itemPath>
       <itemPath>SyncDataEvaluation.h</itemPath>
       <itemPath>YINTester.h</itemPath>
@@ -204,6 +205,8 @@
       </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="GestureResampler.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="GestureSetEvaluation.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="GestureSetEvaluation.h" ex="false" tool="3" flavor2="0">
@@ -336,6 +339,8 @@
       <item path="FeatureCalculator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="GestureResampler.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GestureSetEvaluation.cpp" ex="false" tool="1" flavor2="0">
       </item>

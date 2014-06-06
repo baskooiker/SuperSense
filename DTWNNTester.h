@@ -40,7 +40,7 @@ public:
 
     static const int NROFTRIALS = 7;
 
-    void evaluateIndividual(const vector<string> &filenames){
+    void evaluateIndividual(const vector<string> &filenames) {
         for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
             printf("TrainfileNr = %d\n", trainFileNr);
             trainFilename = filenames[trainFileNr];
@@ -49,7 +49,7 @@ public:
             evaluateOnFirst(filenameVector);
         }
     }
-    
+
     void evaluate(string filename) {
         vector<vector<vector<Point> > > trials = createTemplates(filename);
         printf("templates created\n");
@@ -99,38 +99,42 @@ public:
     void shiftTemplates(map<int, vector<vector<Point> > >* templates, float shift) {
         shift = (float) min(1., max(0., (double) shift));
         for (std::map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
-            int shiftAmount = (int) (it->second[0].size() * shift);
+            boolean deleteOne = false;
             for (int i = 0; i < it->second.size() - 1; i++) {
-                if (shiftAmount > 0)
+                int shiftAmount = (int) (it->second[i].size() * shift);
+                if (shiftAmount > 0) {
                     it->second[i].erase(it->second[i].begin(), it->second[i].begin() + shiftAmount);
+                    deleteOne = true;
+                }
 
-                for (int j = shiftAmount; j > 0; j--)
+                for (int j = 0; j < shiftAmount; j++)
                     it->second[i].push_back(it->second[i + 1][it->second[i + 1].size() - 1 - j]);
 
             }
-            if (shiftAmount > 0) {
+            if (deleteOne) {
                 it->second.pop_back();
             }
         }
         // print
-        //        for (std::map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
-        //            printf("gesture %d\n", it->first);
-        //            for (int i = 0; i < it->second.size(); i++) {
-        //                printf("length = %d\n", it->second[i].size());
-        //            }
-        //            printf("\n");
-        //        }
+        for (std::map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+            printf("gesture %d\n", it->first);
+            for (int i = 0; i < it->second.size(); i++) {
+                printf("length = %d\n", it->second[i].size());
+            }
+            printf("\n");
+        }
     }
 
     void evaluateOnFirst(const vector<string> &filenames, int trainFile = 0) {
         map<int, vector<vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
-        shiftTemplates(templates, shift);
 
         trainFilename = filenames[trainFile];
 
-        initConfusion();
+        int minus = 0;
+        if (shift > .01)
+            minus = 1;
 
-        for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
+        for (int gestIt = 0; gestIt < NROFTRIALS - minus; gestIt++) {
             printf("iter %d\n", gestIt);
             gestNumber = gestIt;
             vector<VectorDTW> dtwBank;
@@ -138,11 +142,16 @@ public:
                 dtwBank.push_back(VectorDTW(templates->at(gestureSet[i])[gestIt].size(), 1.));
 
             for (int i = 0; i < filenames.size(); i++) {
+                printf("test %d of %d\n", i, filenames.size());
                 filename = filenames[i];
 
                 initConfusion();
+                Sleep(1);
 
                 map<int, vector<vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
+                shiftTemplates(trials, shift);
+                resampleVocabulary(trials, interpolate, reduce);
+
                 for (int j = 0; j < NROFTRIALS; j++) {
                     for (int l = 0; l < gestureSet.size(); l++) {
                         int minIndex = -1;
@@ -154,7 +163,6 @@ public:
                                 minIndex = k;
                             }
                         }
-                        Sleep(1);
                         confusion[gestureSet[l] - 1][gestureSet[minIndex] - 1] += 1.0;
                     }
                 }
@@ -172,6 +180,8 @@ public:
             }
             dtwBank.clear();
         }
+
+        Sleep(1);
         freeConfusion();
         Sleep(1);
 
@@ -182,6 +192,8 @@ public:
         }
         templates->clear();
         delete templates;
+
+        printf("evaluateOnFirst done\n");
     }
 
     void evaluateAllFiles(const vector<string> &filenames) {
@@ -275,21 +287,21 @@ protected:
             }
         }
 
-//         print
-//        printf("printf~\n");
-//                for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
-//                    printf("gesture %d\n", it->first);
-//                    for (int i = 0; i < it->second.size(); i++) {
-//                        printf("length = %d\n", it->second[i].size());
-//                    }
-//                    printf("\n");
-//                }
+        //         print
+        //        printf("printf~\n");
+        //                for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+        //                    printf("gesture %d\n", it->first);
+        //                    for (int i = 0; i < it->second.size(); i++) {
+        //                        printf("length = %d\n", it->second[i].size());
+        //                    }
+        //                    printf("\n");
+        //                }
 
-        for(int i = 0; i < data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
             data[i].clear();
         }
         data.clear();
-        
+
         return trials;
     }
 

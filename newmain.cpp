@@ -24,186 +24,253 @@
 
 using namespace std;
 
+vector<string> getNames();
+void testGVF(float from, float to, float interval, string filename);
+void testDTWNN(float from, float to, float interval);
+void testGVFInterUser();
+void testDTWNNInterUser();
+void testGVFFree();
+void testDTWNNFree();
+vector<string> fixedFiles(int offset = 0);
+vector<string> firstFiles();
+
 void threadOne(void* arg) {
-    vector<string> filenames;
-
-    filenames.push_back("data/lien_0.dat");
-    filenames.push_back("data/lien_45.dat");
-    filenames.push_back("data/lien_90.dat");
-//    filenames.push_back("data/nico_0.dat");
-//    filenames.push_back("data/leonie_0.dat");
-//    filenames.push_back("data/maki_1.dat");
-
-    DTWNNTester dtw = DTWNNTester();
-    dtw.setOutputFilename("results/rotationlien2.csv");
-    dtw.setTotalNrGest(20);
-    dtw.evaluateAllFiles(filenames);
-    
-    return;
-    
-    SyncDataEvaluation sde2 = SyncDataEvaluation(filenames);
-    sde2.setTotalNrGest(20);
-    sde2.setOutputFilename("results/intersubject.csv");
-    sde2.evaluateAllFiles();
+    vector<string> filenames = firstFiles();
+    for (int res = 15; res < 26; res += 1) {
+        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+            vector<string> file;
+            file.push_back(filenames[fileNr]);
+            GVFTester gvf = GVFTester();
+            gvf.setInterpolate(20);
+            gvf.setReduce(res);
+            gvf.setOutputFilename("results/resampleGVF.csv");
+            gvf.setTotalNrGest(20);
+            gvf.evaluateAllFiles(file);
+        }
+    }
 }
 
 void threadTwo(void* arg) {
-    std::vector<string> filenames;
-
-//    filenames.push_back("data/maki_0.dat");
-//    filenames.push_back("data/maki_45.dat");
-//    filenames.push_back("data/maki_90.dat");
-//    filenames.push_back("data/lienfree_1.dat");
-//    filenames.push_back("data/lienfree_2.dat");
-//    filenames.push_back("data/lienfree_3.dat");
-
-    filenames.push_back("data/maki_0.dat");
-    filenames.push_back("data/lien_0.dat");
-    filenames.push_back("data/nico_0.dat");
-    filenames.push_back("data/leonie_0.dat");
-    filenames.push_back("data/jan_0.dat");
-    filenames.push_back("data/suzanne_0.dat");
-    
-//    DTWNNTester dtw = DTWNNTester();
-    YINTester dtw = YINTester();
-//    dtw.setOutputFilename("results/shifttest.csv");
-//    dtw.setTotalNrGest(4);
-    dtw.evaluateAllFiles(filenames);
-    return;
-    
-    SyncDataEvaluation sde2 = SyncDataEvaluation(filenames);
-    sde2.setTotalNrGest(4);
-    sde2.setOutputFilename("results/lienfree.csv");
-    sde2.evaluateOnFirst();
+        vector<string> filenames = firstFiles();
+    for (int res = 15; res < 26; res += 1) {
+        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+            vector<string> file;
+            file.push_back(filenames[fileNr]);
+            DTWNNTester gvf = DTWNNTester();
+            gvf.setInterpolate(20);
+            gvf.setReduce(res);
+            gvf.setOutputFilename("results/resampleDTW.csv");
+            gvf.setTotalNrGest(20);
+            gvf.evaluateAllFiles(file);
+        }
+    }
 }
 
 void threadThree(void* arg) {
-    vector<string> filenames;
-    //        filenames.push_back("data/makifree_3.dat");
-    filenames.push_back("data/maki_3.dat");
-
-    SyncDataEvaluation sde = SyncDataEvaluation(filenames);
-    //        sde.setOutputFilename("results/free.csv");
-    sde.setOutputFilename("results/gestureSet.csv");
-    sde.setTotalNrGest(20);
-    sde.evaluate();
-
-    filenames.clear();
-    //        filenames.push_back("data/makifree_3.dat");
-    filenames.push_back("data/makifree_3.dat");
-
-    SyncDataEvaluation sde2 = SyncDataEvaluation(filenames);
-    //        sde.setOutputFilename("results/free.csv");
-    sde2.setOutputFilename("results/free.csv");
-    sde2.setTotalNrGest(4);
-    sde2.evaluate();
+        vector<string> filenames = firstFiles();
+    for (int res = 15; res < 26; res += 1) {
+        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+            vector<string> file;
+            file.push_back(filenames[fileNr]);
+            DTWExtendedTester gvf = DTWExtendedTester();
+            gvf.setInterpolate(20);
+            gvf.setReduce(res);
+            gvf.setOutputFilename("results/resampleDTWExt.csv");
+            gvf.setTotalNrGest(20);
+            gvf.evaluateAllFiles(file);
+        }
+    }
 }
 
-vector<string> freeFiles(){
+vector<string> freeFiles() {
+    vector<string> names = getNames();
     vector<string> filenames;
-    
-    filenames.push_back("data/danfree_1.dat");
-    filenames.push_back("data/danfree_2.dat");
-    filenames.push_back("data/danfree_3.dat");
-    filenames.push_back("data/janfree_1.dat");
-    filenames.push_back("data/janfree_2.dat");
-    filenames.push_back("data/janfree_3.dat");
-    filenames.push_back("data/lienfree_1.dat");
-    filenames.push_back("data/lienfree_2.dat");
-    filenames.push_back("data/lienfree_3.dat");
-    filenames.push_back("data/makifree_1.dat");
-    filenames.push_back("data/makifree_2.dat");
-    filenames.push_back("data/makifree_3.dat");
-    filenames.push_back("data/marcofree_1.dat");
-    filenames.push_back("data/marcofree_2.dat");
-    filenames.push_back("data/marcofree_3.dat");
-    filenames.push_back("data/nicofree_1.dat");
-    filenames.push_back("data/nicofree_2.dat");
-    filenames.push_back("data/nicofree_3.dat");
-    filenames.push_back("data/suzannefree_1.dat");
-    filenames.push_back("data/suzannefree_2.dat");
-    filenames.push_back("data/suzannefree_3.dat");
-    filenames.push_back("data/mirjamfree_1.dat");
-    filenames.push_back("data/mirjamfree_2.dat");
-    filenames.push_back("data/mirjamfree_3.dat");
-    
+    for (int i = 0; i < names.size(); i++) {
+        filenames.push_back("data/" + names[i] + "free_1.dat");
+        filenames.push_back("data/" + names[i] + "free_2.dat");
+        filenames.push_back("data/" + names[i] + "free_3.dat");
+    }
     return filenames;
 }
 
-vector<string> fixedFiles(){
+vector<vector<string> > freeSubjects() {
+    vector<vector<string> > filenames;
+    vector<string> names = getNames();
+    for (int i = 0; i < names.size(); i++) {
+        vector<string> subject;
+        subject.push_back("data/" + names[i] + "free_1.dat");
+        subject.push_back("data/" + names[i] + "free_2.dat");
+        subject.push_back("data/" + names[i] + "free_3.dat");
+        filenames.push_back(subject);
+    }
+    return filenames;
+}
+
+vector<vector<string> > fixedSubjects() {
+    vector<vector<string> > filenames;
+    vector<string> names = getNames();
+    for (int i = 0; i < names.size(); i++) {
+        vector<string> subject;
+        subject.push_back("data/" + names[i] + "_0.dat");
+        subject.push_back("data/" + names[i] + "_45.dat");
+        subject.push_back("data/" + names[i] + "_90.dat");
+        filenames.push_back(subject);
+    }
+    return filenames;
+}
+
+vector<vector<string> > interUserSet() {
+    vector<vector<string> > subjects = fixedSubjects();
+    vector<vector<string> > interSubjects;
+    for (int i = 0; i < subjects[0].size(); i++) {
+        vector<string> set;
+        for (int j = 0; j < subjects.size(); j++)
+            set.push_back(subjects[j][i]);
+        interSubjects.push_back(set);
+    }
+    return interSubjects;
+}
+
+vector<string> fixedFiles(int fileoffset) {
+    vector<string> names = getNames();
     vector<string> filenames;
-    
+    for (int i = fileoffset; i < names.size(); i++) {
+        filenames.push_back("data/" + names[i] + "_0.dat");
+        filenames.push_back("data/" + names[i] + "_45.dat");
+        filenames.push_back("data/" + names[i] + "_90.dat");
+    }
+    return filenames;
+}
+
+vector<string> firstFiles() {
+    vector<string> filenames;
+
     filenames.push_back("data/dan_0.dat");
-    filenames.push_back("data/dan_45.dat");
-    filenames.push_back("data/dan_90.dat");
     filenames.push_back("data/jan_0.dat");
-    filenames.push_back("data/jan_45.dat");
-    filenames.push_back("data/jan_90.dat");
     filenames.push_back("data/lien_0.dat");
-    filenames.push_back("data/lien_45.dat");
-    filenames.push_back("data/lien_90.dat");
     filenames.push_back("data/maki_0.dat");
-    filenames.push_back("data/maki_45.dat");
-    filenames.push_back("data/maki_90.dat");
     filenames.push_back("data/marco_0.dat");
-    filenames.push_back("data/marco_45.dat");
-    filenames.push_back("data/marco_90.dat");
     filenames.push_back("data/nico_0.dat");
-    filenames.push_back("data/nico_45.dat");
-    filenames.push_back("data/nico_90.dat");
     filenames.push_back("data/suzanne_0.dat");
-    filenames.push_back("data/suzanne_45.dat");
-    filenames.push_back("data/suzanne_90.dat");
     filenames.push_back("data/mirjam_0.dat");
-    filenames.push_back("data/mirjam_45.dat");
-    filenames.push_back("data/mirjam_90.dat");
-    
+    filenames.push_back("data/tijs_0.dat");
+    filenames.push_back("data/marije_0.dat");
+
     return filenames;
 }
 
-void writeFeatureFile(){
+vector<string> getNames() {
+    vector<string> names;
+    names.push_back("dan");
+    names.push_back("jan");
+    names.push_back("lien");
+    names.push_back("maki");
+    names.push_back("marco");
+    names.push_back("nico");
+    names.push_back("suzanne");
+    names.push_back("mirjam");
+    names.push_back("tijs");
+    names.push_back("marije");
+    return names;
+}
+
+void writeFeatureFile() {
     FeatureCalculator fc = FeatureCalculator();
     vector<string> filenames = freeFiles();
     fc.calculateFeatures(filenames, "results/featureCalculations2.csv");
 }
 
-void testDTWExtended(){
+void testDTWExtended() {
     vector<string> filenames = fixedFiles();
-    
+
     DTWExtendedTester dtw = DTWExtendedTester();
     dtw.setOutputFilename("results/dtwExtendedTest.csv");
     dtw.setTotalNrGest(20);
     dtw.evaluateIndividual(filenames);
 }
 
-void testDTWNN(){
-    vector<string> filenames = fixedFiles();
-    
-    DTWNNTester dtw = DTWNNTester();
-    dtw.setOutputFilename("results/dtwTest.csv");
-    dtw.setTotalNrGest(20);
-    dtw.evaluateIndividual(filenames);
+void testDTWNN(float from, float to, float interval, string filename, int fileoffset) {
+    vector<string> filenames = fixedFiles(fileoffset);
+    for (float rot = from; rot <= to; rot += interval) {
+        DTWNNTester dtw = DTWNNTester();
+        dtw.setShift(rot);
+        dtw.setOutputFilename(filename);
+        dtw.setTotalNrGest(20);
+        dtw.evaluateIndividual(filenames);
+    }
 }
 
-/*
- * 
- */
-int main(int argc, char** argv) {
-    
-//    writeFeatureFile();
-    testDTWExtended();
-//    testDTWNN();
-    return 0;
-    
-    HANDLE handles[2];
-//    handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);
-    handles[1] = (HANDLE) _beginthread(threadTwo, 0, (void*) 1);
-    //        handles[2] = (HANDLE) _beginthread(threadThree, 0, (void*) 2);
+void testGVF(float from, float to, float interval, string filename = "results/orientationGVF.csv") {
+    vector<string> filenames = fixedFiles();
+    for (float rot = from; rot <= to; rot += interval) {
+        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+            vector<string> file;
+            file.push_back(filenames[fileNr]);
+            GVFTester gvf = GVFTester();
+            gvf.setShift(rot);
+            gvf.setOutputFilename(filename);
+            gvf.setTotalNrGest(20);
+            gvf.evaluateAllFiles(file);
+        }
+    }
+}
 
-    
-//    WaitForSingleObject(handles[0], INFINITE);
+void testDTWNNFree() {
+    vector<string> filenames = freeFiles();
+    DTWNNTester dtw = DTWNNTester();
+    dtw.setOutputFilename("results/freeDTW.csv");
+    dtw.setTotalNrGest(4);
+    dtw.evaluateIndividual(filenames);
+
+}
+
+void testGVFFree() {
+    vector<string> filenames = freeFiles();
+    for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+        vector<string> file;
+        file.push_back(filenames[fileNr]);
+        GVFTester gvf = GVFTester();
+        gvf.setOutputFilename("results/freeGVF.csv");
+        gvf.setTotalNrGest(20);
+        gvf.evaluateAllFiles(file);
+
+    }
+}
+
+void testGVFInterUser() {
+    vector<vector<string> > filenames = interUserSet();
+    for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+        GVFTester gvf = GVFTester();
+        gvf.setOutputFilename("results/interUserGVF.csv");
+        gvf.setTotalNrGest(20);
+        gvf.evaluateAllFiles(filenames[fileNr]);
+    }
+}
+
+void testDTWNNInterUser() {
+    vector<vector<string> > filenames = interUserSet();
+    for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
+        DTWNNTester dtw = DTWNNTester();
+        dtw.setOutputFilename("results/interUserDTW.csv");
+        dtw.setTotalNrGest(20);
+        dtw.evaluateAllFiles(filenames[fileNr]);
+    }
+}
+
+int main(int argc, char** argv) {
+
+
+    HANDLE handles[2];
+    handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);
+    Sleep(100);
+    handles[1] = (HANDLE) _beginthread(threadTwo, 0, (void*) 1);
+    Sleep(100);
+    handles[2] = (HANDLE) _beginthread(threadThree, 0, (void*) 2);
+
+
+    WaitForSingleObject(handles[0], INFINITE);
     WaitForSingleObject(handles[1], INFINITE);
-    //        WaitForSingleObject(handles[2], INFINITE);
+    WaitForSingleObject(handles[2], INFINITE);
 
     return 0;
 }

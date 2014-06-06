@@ -32,12 +32,10 @@ public:
     }
 
     void evaluateAllFiles(const std::vector<std::string> &filenames) {
-        for (shift = .2; shift < .9; shift += .2) {
-            for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
-                printf("TrainfileNr = %d\n", trainFileNr);
-                trainFilename = filenames[trainFileNr];
-                evaluateOnFirst(filenames, trainFileNr);
-            }
+        for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
+            printf("TrainfileNr = %d\n", trainFileNr);
+            trainFilename = filenames[trainFileNr];
+            evaluateOnFirst(filenames, trainFileNr);
         }
     }
 
@@ -45,7 +43,6 @@ protected:
 
     GestureVariationFollower* trainGVF(std::map<int, std::vector<std::vector<Point> > >* templates, std::vector<int> gs, int skip) {
         gestNumber = skip;
-        //        delete gvf;
 
         pdim = 8;
 
@@ -113,6 +110,8 @@ protected:
 
     void testOneFile(string filename) {
         std::map<int, std::vector<std::vector<Point> > >* trials = createAnotatedTemplates(filename);
+        shiftTemplates(trials, shift);
+        resampleVocabulary(trials, interpolate, reduce);
         for (int j = 0; j < NROFTRIALS; j++) {
 
             for (int l = 0; l < gestureSet.size(); l++) {
@@ -154,7 +153,6 @@ protected:
 
     void evaluateOnFirst(const std::vector<std::string> &filenames, int trainFile = 0) {
         std::map<int, std::vector<std::vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
-        shiftTemplates(templates, shift);
 
         GestureVariationFollower *gvf = trainGVF(templates, gestureSet, trainFile);
 

@@ -9,6 +9,7 @@
 #define	DTWEXTENDEDTESTER_H
 
 #include "DTWNNTester.h"
+#include "GestureResampler.h"
 
 class DTWExtendedTester : public DTWNNTester {
 public:
@@ -53,7 +54,6 @@ public:
 
     void evaluateOnFirst(const vector<string> &filenames, int trainFile = 0) {
         map<int, vector<vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
-        shiftTemplates(templates, shift);
 
         trainFilename = filenames[trainFile];
 
@@ -81,6 +81,8 @@ public:
                 deque<Point> buffer;
 
                 map<int, vector<vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
+                shiftTemplates(trials, shift);
+                resampleVocabulary(*trials, interpolate, reduce);
                 for (int l = 0; l < gestureSet.size(); l++) {
                     for (int j = 0; j < NROFTRIALS; j++) {
                         for (int m = 0; m < trials->at(gestureSet[l])[j].size(); m++) {

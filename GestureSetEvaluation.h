@@ -35,6 +35,9 @@ public:
     void setTo(int t);
     void setFrom(int t);
     void printConfusion(bool print = true);
+    void setShift(float f);
+    void setInterpolate(int i);
+    void setReduce(int i);
 
     bool everySample;
 
@@ -119,6 +122,9 @@ protected:
     string trainFilename;
     
     float shift;
+    
+    int interpolate;
+    int reduce;
     
     vector<int> gestureSet;
 };

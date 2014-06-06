@@ -111,6 +111,8 @@ void GestureSetEvaluation::initValues() {
     trainFilename = "";
 
     shift = .0;
+    interpolate = 1;
+    reduce = 1;
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -566,6 +568,7 @@ void GestureSetEvaluation::writeResults() {
     // write results to file
     FILE* f;
     do {
+        Sleep(10);
         f = fopen(outputFilename.c_str(), "a");
         Sleep(10);
     } while (!f);
@@ -650,4 +653,14 @@ void GestureSetEvaluation::freeConfusion() {
     delete[] confusion;
 }
 
+void GestureSetEvaluation::setShift(float f){
+    shift = f;
+}
 
+void GestureSetEvaluation::setInterpolate(int f){
+    interpolate = f;
+}
+
+void GestureSetEvaluation::setReduce(int f){
+    reduce = f;
+}
