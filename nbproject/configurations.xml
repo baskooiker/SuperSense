@@ -74,6 +74,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>DTW_PS.cpp</itemPath>
+    <itemPath>DTW_PS.h</itemPath>
     <itemPath>../YIN/YIN.cpp</itemPath>
     <itemPath>../YIN/YIN.h</itemPath>
   </logicalFolder>
@@ -196,6 +198,10 @@
       <item path="DTWExtendedTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DTWNNTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DTW_PS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DTW_PS.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -331,6 +337,10 @@
       <item path="DTWExtendedTester.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DTWNNTester.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DTW_PS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DTW_PS.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
       </item>

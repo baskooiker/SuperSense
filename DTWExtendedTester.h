@@ -16,7 +16,7 @@ public:
 
     DTWExtendedTester() {
         initValues();
-        classifierType = "dtwext";
+        classifierType = "dtw-ps";
     }
 
     DTWExtendedTester(const DTWExtendedTester& orig) {
@@ -83,13 +83,13 @@ public:
                 map<int, vector<vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
                 shiftTemplates(trials, shift);
                 resampleVocabulary(*trials, interpolate, reduce);
+                
                 for (int l = 0; l < gestureSet.size(); l++) {
                     for (int j = 0; j < NROFTRIALS; j++) {
                         for (int m = 0; m < trials->at(gestureSet[l])[j].size(); m++) {
                             buffer.push_back(trials->at(gestureSet[l])[j][m]);
                             if (buffer.size() > maxSize) {
                                 buffer.pop_front();
-
 
                                 // find best
                                 int minIndex = -1;
@@ -123,10 +123,10 @@ public:
                 }
                 trials->clear();
                 delete trials;
+                freeConfusion();
             }
             dtwBank.clear();
         }
-        freeConfusion();
         Sleep(1);
 
         for (map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {

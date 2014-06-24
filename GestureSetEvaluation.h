@@ -109,22 +109,29 @@ protected:
     float alpha;
 
     string outputFilename;
-    int totalNrGest;
-    int skip;
-    int from;
-    int to;
+    int totalNrGest = 20;
+    int skip = 0;
+    int from = -1;
+    int to = -1;
 
     float** confusion;
     
-    float sum;
+    float sum = 0.;
     
     string classifierType;
     string trainFilename;
     
-    float shift;
+    float shift = 0.;
     
-    int interpolate;
-    int reduce;
+    int interpolate = 0;
+    int reduce = 1;
+    
+    float avgThreshold = .01;
+    float dipThreshold = .12;
+    int maxLength = 30;
+    int maxDelay = 150;
+    int minDips = 2;
+    int hbSize = 55;
     
     vector<int> gestureSet;
 };

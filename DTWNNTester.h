@@ -20,6 +20,8 @@
 #include <algorithm>
 #include "init.h"
 
+#include "GestureResampler.h"
+
 using namespace std;
 
 class DTWNNTester : public GestureSetEvaluation {
@@ -150,7 +152,7 @@ public:
 
                 map<int, vector<vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
                 shiftTemplates(trials, shift);
-                resampleVocabulary(trials, interpolate, reduce);
+                resampleVocabulary(*trials, interpolate, reduce);
 
                 for (int j = 0; j < NROFTRIALS; j++) {
                     for (int l = 0; l < gestureSet.size(); l++) {

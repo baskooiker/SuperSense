@@ -15,6 +15,8 @@
 #include "GestureSetEvaluation.h"
 #include "DTWNNTester.h"
 
+#include "GestureResampler.h"
+
 class GVFTester : public DTWNNTester {
 public:
 
@@ -36,6 +38,16 @@ public:
             printf("TrainfileNr = %d\n", trainFileNr);
             trainFilename = filenames[trainFileNr];
             evaluateOnFirst(filenames, trainFileNr);
+        }
+    }
+    
+    void evaluateIndividual(const vector<string> &filenames) {
+        for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
+            printf("TrainfileNr = %d\n", trainFileNr);
+            trainFilename = filenames[trainFileNr];
+            vector<string> filenameVector;
+            filenameVector.push_back(trainFilename);
+            evaluateOnFirst(filenameVector);
         }
     }
 
@@ -111,7 +123,7 @@ protected:
     void testOneFile(string filename) {
         std::map<int, std::vector<std::vector<Point> > >* trials = createAnotatedTemplates(filename);
         shiftTemplates(trials, shift);
-        resampleVocabulary(trials, interpolate, reduce);
+        resampleVocabulary(*trials, interpolate, reduce);
         for (int j = 0; j < NROFTRIALS; j++) {
 
             for (int l = 0; l < gestureSet.size(); l++) {

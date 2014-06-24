@@ -109,10 +109,6 @@ void GestureSetEvaluation::initValues() {
 
     classifierType = "gvf";
     trainFilename = "";
-
-    shift = .0;
-    interpolate = 1;
-    reduce = 1;
 }
 
 GestureVariationFollower* GestureSetEvaluation::trainClassifier(vector<vector<float> > data, vector<int> gs, int skip) {
@@ -576,8 +572,12 @@ void GestureSetEvaluation::writeResults() {
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";
     out << "\"" << gestureSetString(gestureSet) << "\"" << ";" << gestureSet.size() << ";" << sum << ";" << classifierType << ";" << trainFilename;
+    
     out << ";" << shift;
-
+    
+    out << ";" << interpolate << ";" << reduce;
+    out << ";" << alpha << ";" << avgThreshold << ";" << dipThreshold << ";" << maxLength << ";" << maxDelay << ";" << minDips << ";" << hbSize;
+    
     out << ";" << numberOfParticles << ";" << resmapleThreshold << ";" << pdim << ";" << icov << ";";
     out << alpha << ";" << multiplier << ";";
     out << spreadMeanPos << ";" << spreadMeanVel << ";" << spreadMeanSca << ";" << spreadMeanOff << ";" << spreadMeanRot << ";";
@@ -631,7 +631,7 @@ void GestureSetEvaluation::printConfusion(bool print) {
     // get average of diagonal for performance
     sum = 0.f;
     for (int i = 0; i < gestureSet.size(); i++) {
-        sum += confusion[gestureSet[i]-1][gestureSet[i]-1];
+        sum += confusion[gestureSet[i] - 1][gestureSet[i] - 1];
     }
     sum /= (float) gestureSet.size();
     printf("performance = %.3f \n\n", sum);
@@ -653,14 +653,14 @@ void GestureSetEvaluation::freeConfusion() {
     delete[] confusion;
 }
 
-void GestureSetEvaluation::setShift(float f){
+void GestureSetEvaluation::setShift(float f) {
     shift = f;
 }
 
-void GestureSetEvaluation::setInterpolate(int f){
+void GestureSetEvaluation::setInterpolate(int f) {
     interpolate = f;
 }
 
-void GestureSetEvaluation::setReduce(int f){
+void GestureSetEvaluation::setReduce(int f) {
     reduce = f;
 }

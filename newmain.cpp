@@ -31,55 +31,37 @@ void testGVFInterUser();
 void testDTWNNInterUser();
 void testGVFFree();
 void testDTWNNFree();
+void reproduceDTWExtended();
+void interUserDTWExtended();
+void freeDTWExtended();
 vector<string> fixedFiles(int offset = 0);
 vector<string> firstFiles();
+vector<vector<string> > fixedSubjects(int offset = 0);
+vector<vector<string> > interUserSet(int offset = 0);
 
 void threadOne(void* arg) {
-    vector<string> filenames = firstFiles();
-    for (int res = 15; res < 26; res += 1) {
-        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
-            vector<string> file;
-            file.push_back(filenames[fileNr]);
-            GVFTester gvf = GVFTester();
-            gvf.setInterpolate(20);
-            gvf.setReduce(res);
-            gvf.setOutputFilename("results/resampleGVF.csv");
-            gvf.setTotalNrGest(20);
-            gvf.evaluateAllFiles(file);
-        }
-    }
+    YINTester yin = YINTester();
+    yin.setFilenames(firstFiles());
+    yin.setOutputFilename("results/yinhbsizefinalredo1.csv");
+    yin.findBestHBSize(5,50,5);
+    yin.findBestHBSize(240,260,5);
 }
 
 void threadTwo(void* arg) {
-        vector<string> filenames = firstFiles();
-    for (int res = 15; res < 26; res += 1) {
-        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
-            vector<string> file;
-            file.push_back(filenames[fileNr]);
-            DTWNNTester gvf = DTWNNTester();
-            gvf.setInterpolate(20);
-            gvf.setReduce(res);
-            gvf.setOutputFilename("results/resampleDTW.csv");
-            gvf.setTotalNrGest(20);
-            gvf.evaluateAllFiles(file);
-        }
-    }
+    YINTester yin = YINTester();
+    yin.setFilenames(firstFiles());
+    yin.setOutputFilename("results/yinhbsizefinalredo2.csv");
+    yin.findBestHBSize(50,100,5);
+    yin.findBestHBSize(220,240,5);
 }
 
 void threadThree(void* arg) {
-        vector<string> filenames = firstFiles();
-    for (int res = 15; res < 26; res += 1) {
-        for (int fileNr = 0; fileNr < filenames.size(); fileNr++) {
-            vector<string> file;
-            file.push_back(filenames[fileNr]);
-            DTWExtendedTester gvf = DTWExtendedTester();
-            gvf.setInterpolate(20);
-            gvf.setReduce(res);
-            gvf.setOutputFilename("results/resampleDTWExt.csv");
-            gvf.setTotalNrGest(20);
-            gvf.evaluateAllFiles(file);
-        }
-    }
+    YINTester yin = YINTester();
+    yin.setFilenames(firstFiles());
+    yin.setOutputFilename("results/yinhbsizefinalredo3.csv");
+    yin.findBestHBSize(100,140,5);
+    yin.findBestHBSize(200,220,5);
+    
 }
 
 vector<string> freeFiles() {
@@ -106,10 +88,10 @@ vector<vector<string> > freeSubjects() {
     return filenames;
 }
 
-vector<vector<string> > fixedSubjects() {
+vector<vector<string> > fixedSubjects(int offset) {
     vector<vector<string> > filenames;
     vector<string> names = getNames();
-    for (int i = 0; i < names.size(); i++) {
+    for (int i = offset; i < names.size(); i++) {
         vector<string> subject;
         subject.push_back("data/" + names[i] + "_0.dat");
         subject.push_back("data/" + names[i] + "_45.dat");
@@ -119,8 +101,8 @@ vector<vector<string> > fixedSubjects() {
     return filenames;
 }
 
-vector<vector<string> > interUserSet() {
-    vector<vector<string> > subjects = fixedSubjects();
+vector<vector<string> > interUserSet(int offset) {
+    vector<vector<string> > subjects = fixedSubjects(offset);
     vector<vector<string> > interSubjects;
     for (int i = 0; i < subjects[0].size(); i++) {
         vector<string> set;
@@ -169,7 +151,7 @@ vector<string> getNames() {
     names.push_back("nico");
     names.push_back("suzanne");
     names.push_back("mirjam");
-    names.push_back("tijs");
+//    names.push_back("tijs");
     names.push_back("marije");
     return names;
 }
@@ -257,9 +239,37 @@ void testDTWNNInterUser() {
     }
 }
 
+void reproduceDTWExtended() {
+    vector<vector<string> > filenames = fixedSubjects();
+    for (int i = 0; i < filenames.size(); i++) {
+        DTWExtendedTester dtw = DTWExtendedTester();
+        dtw.setOutputFilename("results/reproduceDTWExt2.csv");
+        dtw.setTotalNrGest(20);
+        dtw.evaluateAllFiles(filenames[i]);
+    }
+}
+
+void interUserDTWExtended() {
+    vector<vector<string> > filenames = interUserSet();
+    for (int i = 0; i < filenames.size(); i++) {
+        DTWExtendedTester dtw = DTWExtendedTester();
+        dtw.setOutputFilename("results/interUserDTWExt.csv");
+        dtw.setTotalNrGest(20);
+        dtw.evaluateAllFiles(filenames[i]);
+    }
+}
+
+void freeDTWExtended() {
+    vector<vector<string> > filenames = freeSubjects();
+    for (int i = 0; i < filenames.size(); i++) {
+        DTWExtendedTester dtw = DTWExtendedTester();
+        dtw.setOutputFilename("results/freeDTWExt.csv");
+        dtw.setTotalNrGest(4);
+        dtw.evaluateAllFiles(filenames[i]);
+    }
+}
+
 int main(int argc, char** argv) {
-
-
     HANDLE handles[2];
     handles[0] = (HANDLE) _beginthread(threadOne, 0, (void*) 0);
     Sleep(100);
