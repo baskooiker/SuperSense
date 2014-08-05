@@ -14,6 +14,9 @@
 #include "../YIN/YIN.h"
 
 class YINTester : public DTWNNTester {
+private:
+    int nroftrialinrow = 2;
+
 public:
 
     YINTester() {
@@ -26,9 +29,17 @@ public:
         maxDelay = 150;
         minDips = 2;
         hbSize = 55;
-        
+
+        avgThreshold = .01f;
+        dipThreshold = .2f;
+        maxLength = 20;
+        maxDelay = 150;
+        minDips = 2;
+        alpha = 1.f;
+        hbSize = 1;
+
         totalNrGest = 0;
-        
+
         outputFilename = "results/YINResults.csv";
     }
 
@@ -164,6 +175,92 @@ public:
         return sum;
     }
 
+    float evaluate2(const vector<string>& filenames, bool print = true) {
+        YIN* yin = new YIN(3);
+        yin->setAverageThreshold(avgThreshold); // .1
+        yin->setDipThreshold(dipThreshold);
+        yin->setMaxLength(maxLength);
+        yin->setMaxDelay(maxDelay);
+        yin->setMinDips(minDips);
+
+
+        AlphaFilter ax = AlphaFilter(alpha);
+        AlphaFilter ay = AlphaFilter(alpha);
+        AlphaFilter az = AlphaFilter(alpha);
+
+        HistogramBuffer hb = HistogramBuffer(hbSize);
+
+        for (int trainFileNr = 0; trainFileNr < filenames.size(); trainFileNr++) {
+
+            sum = 0.;
+            float counter = 0.;
+
+            map<int, vector<vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFileNr]);
+            trainFilename = filename = filenames[trainFileNr];
+
+            float correct[templates->size()];
+
+            int index = 0;
+            if (print)
+                printf("Testfile: %s \n", filename.c_str());
+
+            int nrOfTrials = 0;
+            for (map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+                nrOfTrials = nrOfTrials > it->second.size() ? nrOfTrials : it->second.size();
+            }
+
+            for (int k = 0; k < nrOfTrials - nroftrialinrow + 1; k++) {
+
+                float counter2;
+                float sum2 = 0.;
+                counter2 = 0.;
+
+                for (map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+                    std::vector<vector<Point> > gesture = it->second;
+
+                    for (int i = 0; i < nroftrialinrow; i++) {
+                        int ki = k + i;
+                        for (int j = 0; j < gesture[ki].size(); j++) {
+
+                            vector<float> sample;
+                            sample.push_back(ax.value(gesture[ki][j].x));
+                            sample.push_back(ay.value(gesture[ki][j].y));
+                            sample.push_back(az.value(gesture[ki][j].z));
+
+//                            printf("%f %f %f\n", ax.value(), ay.value(), az.value());
+
+                            yin->process(sample);
+                            hb.put(yin->isSync() ? 1 : 0);
+                            //                            printf("%s\n", yin->isSync() ? "TRUE" : "FALSE");
+                            //                            printf("%f %f %f\n", sample[0], sample[1], sample[2]);
+
+                            if (hb.get() == i || (hb.get() == 1 && i > 0)) {
+                                sum2 += 1;
+                                correct[index]++;
+                            }
+                            counter2++;
+                        }
+                    }
+                }
+                sum2 /= counter2;
+                sum += sum2;
+                counter++;
+                correct[index++] /= (float) counter2;
+                printf("%f\n", sum2);
+            }
+
+
+            sum = sum / counter;
+            printf("Total = %f\n", sum);
+
+            writeResults();
+        }
+
+        delete yin;
+
+        return sum;
+    }
+
     void printParams() {
         printf("avgThreshold = %f\n", avgThreshold);
         printf("dipThreshold = %f\n", dipThreshold);
@@ -187,8 +284,26 @@ public:
                 bestVal = val;
             }
             alpha = bestVal;
-//            printf("Best alpha = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best alpha = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
+        }
+    }
+
+    void findBestAlpha2(float from, float to, float with) {
+        float bestPerf = 0.0;
+        float bestVal = 0.0;
+
+        for (float val = from; val < to; val += with) {
+            printf("Current alpha = %.2f\n", val);
+            alpha = val;
+            float perf = evaluate2(filenames);
+            if (perf > bestPerf) {
+                bestPerf = perf;
+                bestVal = val;
+            }
+            alpha = bestVal;
+            //            printf("Best alpha = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
         }
     }
 
@@ -205,8 +320,8 @@ public:
                 bestVal = val;
             }
             avgThreshold = bestVal;
-//            printf("Best avgThreshold = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best avgThreshold = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
         }
     }
 
@@ -223,8 +338,24 @@ public:
                 bestVal = val;
             }
             dipThreshold = bestVal;
-//            printf("Best dipThreshold = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best dipThreshold = %.2f with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
+        }
+    }
+
+    void findBestDipThreshold2(float from, float to, float with) {
+        float bestPerf = 0.0;
+        float bestVal = 0.0;
+
+        for (float val = from; val <= to; val += with) {
+            printf("Current dipThreshold = %.2f\n", val);
+            dipThreshold = val;
+            float perf = evaluate2(filenames);
+            if (perf > bestPerf) {
+                bestPerf = perf;
+                bestVal = val;
+            }
+            dipThreshold = bestVal;
         }
     }
 
@@ -241,26 +372,24 @@ public:
                 bestVal = val;
             }
             maxLength = bestVal;
-//            printf("Best MaxLength = %d with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best MaxLength = %d with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
         }
     }
 
-    void findBestMaxDelay() {
+    void findBestTau2(int from, int to, int with) {
         float bestPerf = 0.0;
         int bestVal = 0;
 
-        for (int val = 50; val < 155; val += 10) {
+        for (int val = from; val < to; val += with) {
             maxDelay = val;
-            printf("Current maxDelay = %d\n", val);
-            float perf = evaluate(filenames);
+            printf("Current tau = %d\n", val);
+            float perf = evaluate2(filenames);
             if (perf > bestPerf) {
                 bestPerf = perf;
                 bestVal = val;
             }
             maxDelay = bestVal;
-//            printf("Best maxDelay = %d with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
         }
     }
 
@@ -277,8 +406,24 @@ public:
                 bestVal = val;
             }
             hbSize = bestVal;
-//            printf("Best hbSize = %d with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best hbSize = %d with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
+        }
+    }
+
+    void findBestHBSize2(int from = 1, int to = 65, int with = 2) {
+        float bestPerf = 0.0;
+        int bestVal = 0;
+
+        for (int val = from; val < to; val += with) {
+            hbSize = val;
+            printf("Current hbSize = %d\n", val);
+            float perf = evaluate2(filenames);
+            if (perf > bestPerf) {
+                bestPerf = perf;
+                bestVal = val;
+            }
+            hbSize = bestVal;
         }
     }
 
@@ -295,8 +440,8 @@ public:
                 bestVal = val;
             }
             *parameter = bestVal;
-//            printf("Best value = %d with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best value = %d with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
         }
     }
 
@@ -313,8 +458,8 @@ public:
                 bestVal = val;
             }
             *parameter = bestVal;
-//            printf("Best value = %f with performance = %.3f\n\n", bestVal, bestPerf);
-//            printParams();
+            //            printf("Best value = %f with performance = %.3f\n\n", bestVal, bestPerf);
+            //            printParams();
         }
     }
 
@@ -325,9 +470,24 @@ public:
         findBestFloat(&alpha, .15, .6, .05);
     }
 
-    
-    void setFilenames(vector<string> filenms){
+    void setFilenames(vector<string> filenms) {
         filenames = filenms;
+    }
+
+    void setTau(float f) {
+        maxLength = f;
+    }
+
+    void setAlpha(float al) {
+        alpha = al;
+    }
+
+    void setNrOfTrialsInRow(int i) {
+        nroftrialinrow = i;
+    }
+
+    void setAbsoluteThreshold(float f) {
+        dipThreshold = f;
     }
 };
 

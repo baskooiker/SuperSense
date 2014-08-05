@@ -43,7 +43,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/2102424670/AlphaFilter.o \
 	${OBJECTDIR}/_ext/2102424670/utils.o \
 	${OBJECTDIR}/DTW_PS.o \
-	${OBJECTDIR}/DataChecker.o \
 	${OBJECTDIR}/GestureSetEvaluation.o \
 	${OBJECTDIR}/SyncDataEvaluation.o \
 	${OBJECTDIR}/features.o \
@@ -115,11 +114,6 @@ ${OBJECTDIR}/DTW_PS.o: nbproject/Makefile-${CND_CONF}.mk DTW_PS.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/DTW_PS.o DTW_PS.cpp
-
-${OBJECTDIR}/DataChecker.o: nbproject/Makefile-${CND_CONF}.mk DataChecker.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I../../../gvf-master/Eigen -I../../../gvf-master/src -I../utils -MMD -MP -MF $@.d -o ${OBJECTDIR}/DataChecker.o DataChecker.cpp
 
 ${OBJECTDIR}/GestureSetEvaluation.o: nbproject/Makefile-${CND_CONF}.mk GestureSetEvaluation.cpp 
 	${MKDIR} -p ${OBJECTDIR}

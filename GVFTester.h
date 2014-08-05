@@ -51,6 +51,44 @@ public:
         }
     }
 
+    void evaluateOnFirst(const std::vector<std::string> &filenames, int trainFile = 0) {
+        std::map<int, std::vector<std::vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
+
+        GestureVariationFollower *gvf = trainGVF(templates, gestureSet, trainFile);
+
+        trainFilename = filenames[trainFile];
+
+        initConfusion();
+
+        for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
+            printf("iter %d\n", gestIt);
+            gestNumber = gestIt;
+
+            for (int i = 0; i < filenames.size(); i++) {
+                filename = filenames[i];
+
+                initConfusion();
+
+                testOneFile(filenames[i]);
+
+                printConfusion();
+                writeResults();
+
+            }
+        }
+
+        freeConfusion();
+
+        for (std::map<int, std::vector<std::vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
+            for (int i = 0; i < it->second.size(); i++)
+                it->second[i].clear();
+            it->second.clear();
+        }
+        templates->clear();
+        delete templates;
+        delete gvf;
+    }
+
 protected:
 
     GestureVariationFollower* trainGVF(std::map<int, std::vector<std::vector<Point> > >* templates, std::vector<int> gs, int skip) {
@@ -161,44 +199,6 @@ protected:
         }
         trials->clear();
         delete trials;
-    }
-
-    void evaluateOnFirst(const std::vector<std::string> &filenames, int trainFile = 0) {
-        std::map<int, std::vector<std::vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
-
-        GestureVariationFollower *gvf = trainGVF(templates, gestureSet, trainFile);
-
-        trainFilename = filenames[trainFile];
-
-        initConfusion();
-
-        for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
-            printf("iter %d\n", gestIt);
-            gestNumber = gestIt;
-
-            for (int i = 0; i < filenames.size(); i++) {
-                filename = filenames[i];
-
-                initConfusion();
-
-                testOneFile(filenames[i]);
-
-                printConfusion();
-                writeResults();
-
-            }
-        }
-
-        freeConfusion();
-
-        for (std::map<int, std::vector<std::vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
-            for (int i = 0; i < it->second.size(); i++)
-                it->second[i].clear();
-            it->second.clear();
-        }
-        templates->clear();
-        delete templates;
-        delete gvf;
     }
 
 };

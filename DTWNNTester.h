@@ -256,6 +256,7 @@ protected:
         map<int, vector<vector<Point> > >* trials = new map<int, vector<vector<Point> > >();
 
         vector<vector<float> > data = loadData2(filename);
+
         gestureSet = gesturesInData(data);
 
         bool inTrial = false;
@@ -267,6 +268,7 @@ protected:
             bool newTrial = (int) data[sampleNr][4] == 1;
             int sampleGest = (int) sample[3];
             Point p = Point(sample[0], sample[1], sample[2]);
+//            printf("%f %f %f\n", p.x,p.y,p.z);
             if (inTrial) {
                 if (newTrial) {
                     if (++trialNr < NROFTRIALS) {
@@ -290,14 +292,14 @@ protected:
         }
 
         //         print
-        //        printf("printf~\n");
-        //                for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
-        //                    printf("gesture %d\n", it->first);
-        //                    for (int i = 0; i < it->second.size(); i++) {
-        //                        printf("length = %d\n", it->second[i].size());
-        //                    }
-        //                    printf("\n");
-        //                }
+//                printf("printf~\n");
+//                        for (std::map<int, vector<vector<Point> > >::iterator it = trials->begin(); it != trials->end(); it++) {
+//                            printf("gesture %d\n", it->first);
+//                            for (int i = 0; i < it->second.size(); i++) {
+//                                printf("length = %d\n", it->second[i].size());
+//                            }
+//                            printf("\n");
+//                        }
 
         for (int i = 0; i < data.size(); i++) {
             data[i].clear();

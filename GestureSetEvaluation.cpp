@@ -568,6 +568,7 @@ void GestureSetEvaluation::writeResults() {
         f = fopen(outputFilename.c_str(), "a");
         Sleep(10);
     } while (!f);
+    // filename;trial;gestSet;setSize;accuracy;type;trainfile;phase;interpolate;reduce;alpha;avgThreshold;dipThreshold;tau;maxDelay;minDips;hbSize;
     out.open(outputFilename.c_str(), fstream::out | fstream::app);
     out << "\"" << filename << "\"" << ";";
     out << gestNumber << ";";

@@ -5,9 +5,28 @@
  * Created on 13 januari 2014, 14:13
  */
 
+#ifdef _DEBUG
+/* Always crash on exceptions when debugging */
+#define USE_FP_EXCEPTIONS
+#endif
+
+#ifdef USE_FP_EXCEPTIONS
+/* Enable exceptions for testing. */
+uint ifp = _controlfp(0, 0);
+uint mask = EM_ZERODIVIDE | EM_OVERFLOW | EM_INVALID;
+
+#ifdef USE_FP_DENORMAL_TEST
+mask |= EM_DENORMAL;
+
+#endif
+
+ifp &= ~mask;
+_controlfp(ifp, MCW_EM);
+
+#endif
+
 #include "SyncDataEvaluation.h"
 #include "GestureSetEvaluation.h"
-#include "DataChecker.h"
 #include "DTWNNTester.h"
 #include "GVFTester.h"
 #include "YINTester.h"
@@ -35,33 +54,106 @@ void reproduceDTWExtended();
 void interUserDTWExtended();
 void freeDTWExtended();
 vector<string> fixedFiles(int offset = 0);
-vector<string> firstFiles();
+vector<string> firstFiles(int offset = 0);
 vector<vector<string> > fixedSubjects(int offset = 0);
 vector<vector<string> > interUserSet(int offset = 0);
 
 void threadOne(void* arg) {
-    YINTester yin = YINTester();
-    yin.setFilenames(firstFiles());
-    yin.setOutputFilename("results/yinhbsizefinalredo1.csv");
-    yin.findBestHBSize(5,50,5);
-    yin.findBestHBSize(240,260,5);
+
+    vector<vector<string> > filenames = interUserSet();
+    GVFTester gvf = GVFTester();
+    gvf.setOutputFilename("results/interUserFinal14.csv");
+    gvf.setTotalNrGest(20);
+    gvf.evaluateOnFirst(filenames[0], 6);
+
+    for (int i = 9; i < 32; i++) {
+        GVFTester gvft = GVFTester();
+        gvft.setInterpolate(20);
+        gvft.setReduce(i);
+        gvft.setOutputFilename("results/speedFinal1.csv");
+        gvft.setTotalNrGest(20);
+        gvft.evaluateIndividual(filenames[0]);
+        
+        DTWNNTester dtw = DTWNNTester();
+        dtw.setInterpolate(20);
+        dtw.setReduce(i);
+        dtw.setOutputFilename("results/speedFinal1.csv");
+        dtw.setTotalNrGest(20);
+        dtw.evaluateIndividual(filenames[0]);
+        
+        DTWExtendedTester dtwps = DTWExtendedTester();
+        dtwps.setInterpolate(20);
+        dtwps.setReduce(i);
+        dtwps.setOutputFilename("results/speedFinal1.csv");
+        dtwps.setTotalNrGest(20);
+        dtwps.evaluateIndividual(filenames[0]);
+
+    }
 }
 
 void threadTwo(void* arg) {
-    YINTester yin = YINTester();
-    yin.setFilenames(firstFiles());
-    yin.setOutputFilename("results/yinhbsizefinalredo2.csv");
-    yin.findBestHBSize(50,100,5);
-    yin.findBestHBSize(220,240,5);
+    vector<vector<string> > filenames = interUserSet();
+    GVFTester gvf = GVFTester();
+    gvf.setOutputFilename("results/interUserFinal24.csv");
+    gvf.setTotalNrGest(20);
+    gvf.evaluateOnFirst(filenames[1], 6);
+
+    for (int i = 9; i < 32; i++) {
+        GVFTester gvft = GVFTester();
+        gvft.setInterpolate(20);
+        gvft.setReduce(i);
+        gvft.setOutputFilename("results/speedFinal2.csv");
+        gvft.setTotalNrGest(20);
+        gvft.evaluateIndividual(filenames[1]);
+        
+        DTWNNTester dtw = DTWNNTester();
+        dtw.setInterpolate(20);
+        dtw.setReduce(i);
+        dtw.setOutputFilename("results/speedFinal2.csv");
+        dtw.setTotalNrGest(20);
+        dtw.evaluateIndividual(filenames[1]);
+        
+        DTWExtendedTester dtwps = DTWExtendedTester();
+        dtwps.setInterpolate(20);
+        dtwps.setReduce(i);
+        dtwps.setOutputFilename("results/speedFinal2.csv");
+        dtwps.setTotalNrGest(20);
+        dtwps.evaluateIndividual(filenames[1]);
+
+    }
 }
 
 void threadThree(void* arg) {
-    YINTester yin = YINTester();
-    yin.setFilenames(firstFiles());
-    yin.setOutputFilename("results/yinhbsizefinalredo3.csv");
-    yin.findBestHBSize(100,140,5);
-    yin.findBestHBSize(200,220,5);
-    
+
+    vector<vector<string> > filenames = interUserSet();
+    GVFTester gvf = GVFTester();
+    gvf.setOutputFilename("results/interUserFinal34.csv");
+    gvf.setTotalNrGest(20);
+    gvf.evaluateOnFirst(filenames[2], 6);
+
+    for (int i = 9; i < 32; i++) {
+        GVFTester gvft = GVFTester();
+        gvft.setInterpolate(20);
+        gvft.setReduce(i);
+        gvft.setOutputFilename("results/speedFinal3.csv");
+        gvft.setTotalNrGest(20);
+        gvft.evaluateIndividual(filenames[2]);
+        
+        DTWNNTester dtw = DTWNNTester();
+        dtw.setInterpolate(20);
+        dtw.setReduce(i);
+        dtw.setOutputFilename("results/speedFinal3.csv");
+        dtw.setTotalNrGest(20);
+        dtw.evaluateIndividual(filenames[2]);
+        
+        DTWExtendedTester dtwps = DTWExtendedTester();
+        dtwps.setInterpolate(20);
+        dtwps.setReduce(i);
+        dtwps.setOutputFilename("results/speedFinal3.csv");
+        dtwps.setTotalNrGest(20);
+        dtwps.evaluateIndividual(filenames[2]);
+
+    }
 }
 
 vector<string> freeFiles() {
@@ -124,8 +216,10 @@ vector<string> fixedFiles(int fileoffset) {
     return filenames;
 }
 
-vector<string> firstFiles() {
+vector<string> firstFiles(int offset) {
     vector<string> filenames;
+
+    return interUserSet(offset)[0];
 
     filenames.push_back("data/dan_0.dat");
     filenames.push_back("data/jan_0.dat");
@@ -151,7 +245,7 @@ vector<string> getNames() {
     names.push_back("nico");
     names.push_back("suzanne");
     names.push_back("mirjam");
-//    names.push_back("tijs");
+    //    names.push_back("tijs");
     names.push_back("marije");
     return names;
 }

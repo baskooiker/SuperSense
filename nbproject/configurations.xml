@@ -6,7 +6,6 @@
                    projectFiles="true">
       <itemPath>DTWExtendedTester.h</itemPath>
       <itemPath>DTWNNTester.h</itemPath>
-      <itemPath>DataChecker.h</itemPath>
       <itemPath>FeatureCalculator.h</itemPath>
       <itemPath>GVFTester.h</itemPath>
       <itemPath>GestureResampler.h</itemPath>
@@ -34,7 +33,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>DataChecker.cpp</itemPath>
       <itemPath>GestureSetEvaluation.cpp</itemPath>
       <itemPath>SyncDataEvaluation.cpp</itemPath>
       <itemPath>features.cpp</itemPath>
@@ -203,10 +201,6 @@
       </item>
       <item path="DTW_PS.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="DataChecker.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="FeatureCalculator.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="GVFTester.h" ex="false" tool="3" flavor2="0">
@@ -341,10 +335,6 @@
       <item path="DTW_PS.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="DTW_PS.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="DataChecker.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="DataChecker.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="FeatureCalculator.h" ex="false" tool="3" flavor2="0">
       </item>
