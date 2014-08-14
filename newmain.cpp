@@ -35,6 +35,7 @@ _controlfp(ifp, MCW_EM);
 
 #include <string>
 #include <vector>
+#include <map>
 #include <fstream>
 #include <process.h>
 #include <windows.h>
@@ -59,100 +60,58 @@ vector<vector<string> > fixedSubjects(int offset = 0);
 vector<vector<string> > interUserSet(int offset = 0);
 
 void threadOne(void* arg) {
-
-    vector<vector<string> > filenames = interUserSet();
+    DTWNNTester dtw = DTWNNTester();
+    DTWExtendedTester dtwps = DTWExtendedTester();
     GVFTester gvf = GVFTester();
-    gvf.setOutputFilename("results/interUserFinal14.csv");
-    gvf.setTotalNrGest(20);
-    gvf.evaluateOnFirst(filenames[0], 6);
-
-    for (int i = 9; i < 32; i++) {
-        GVFTester gvft = GVFTester();
-        gvft.setInterpolate(20);
-        gvft.setReduce(i);
-        gvft.setOutputFilename("results/speedFinal1.csv");
-        gvft.setTotalNrGest(20);
-        gvft.evaluateIndividual(filenames[0]);
-        
-        DTWNNTester dtw = DTWNNTester();
-        dtw.setInterpolate(20);
-        dtw.setReduce(i);
-        dtw.setOutputFilename("results/speedFinal1.csv");
-        dtw.setTotalNrGest(20);
-        dtw.evaluateIndividual(filenames[0]);
-        
-        DTWExtendedTester dtwps = DTWExtendedTester();
-        dtwps.setInterpolate(20);
-        dtwps.setReduce(i);
-        dtwps.setOutputFilename("results/speedFinal1.csv");
-        dtwps.setTotalNrGest(20);
-        dtwps.evaluateIndividual(filenames[0]);
-
+    dtw.setOutputFilename("results/phase0.csv");
+    dtwps.setOutputFilename("results/phase0.csv");
+    gvf.setOutputFilename("results/phase0.csv");
+    vector<string> filenames = interUserSet()[0];
+    for (float phase = .0; phase < .95; phase += .1) {
+        dtw.setShift(phase);
+        dtw.evaluateIndividual(filenames);
+        dtwps.setShift(phase);
+        dtwps.evaluateIndividual(filenames);
+        gvf.setShift(phase);
+        gvf.evaluateIndividual(filenames);
     }
 }
 
 void threadTwo(void* arg) {
-    vector<vector<string> > filenames = interUserSet();
+
+    DTWNNTester dtw = DTWNNTester();
+    DTWExtendedTester dtwps = DTWExtendedTester();
     GVFTester gvf = GVFTester();
-    gvf.setOutputFilename("results/interUserFinal24.csv");
-    gvf.setTotalNrGest(20);
-    gvf.evaluateOnFirst(filenames[1], 6);
-
-    for (int i = 9; i < 32; i++) {
-        GVFTester gvft = GVFTester();
-        gvft.setInterpolate(20);
-        gvft.setReduce(i);
-        gvft.setOutputFilename("results/speedFinal2.csv");
-        gvft.setTotalNrGest(20);
-        gvft.evaluateIndividual(filenames[1]);
-        
-        DTWNNTester dtw = DTWNNTester();
-        dtw.setInterpolate(20);
-        dtw.setReduce(i);
-        dtw.setOutputFilename("results/speedFinal2.csv");
-        dtw.setTotalNrGest(20);
-        dtw.evaluateIndividual(filenames[1]);
-        
-        DTWExtendedTester dtwps = DTWExtendedTester();
-        dtwps.setInterpolate(20);
-        dtwps.setReduce(i);
-        dtwps.setOutputFilename("results/speedFinal2.csv");
-        dtwps.setTotalNrGest(20);
-        dtwps.evaluateIndividual(filenames[1]);
-
+    dtw.setOutputFilename("results/phase1.csv");
+    dtwps.setOutputFilename("results/phase1.csv");
+    gvf.setOutputFilename("results/phase1.csv");
+    vector<string> filenames = interUserSet()[1];
+    for (float phase = .0; phase < .95; phase += .1) {
+        dtw.setShift(phase);
+        dtw.evaluateIndividual(filenames);
+        dtwps.setShift(phase);
+        dtwps.evaluateIndividual(filenames);
+        gvf.setShift(phase);
+        gvf.evaluateIndividual(filenames);
     }
 }
 
 void threadThree(void* arg) {
 
-    vector<vector<string> > filenames = interUserSet();
+    DTWNNTester dtw = DTWNNTester();
+    DTWExtendedTester dtwps = DTWExtendedTester();
     GVFTester gvf = GVFTester();
-    gvf.setOutputFilename("results/interUserFinal34.csv");
-    gvf.setTotalNrGest(20);
-    gvf.evaluateOnFirst(filenames[2], 6);
-
-    for (int i = 9; i < 32; i++) {
-        GVFTester gvft = GVFTester();
-        gvft.setInterpolate(20);
-        gvft.setReduce(i);
-        gvft.setOutputFilename("results/speedFinal3.csv");
-        gvft.setTotalNrGest(20);
-        gvft.evaluateIndividual(filenames[2]);
-        
-        DTWNNTester dtw = DTWNNTester();
-        dtw.setInterpolate(20);
-        dtw.setReduce(i);
-        dtw.setOutputFilename("results/speedFinal3.csv");
-        dtw.setTotalNrGest(20);
-        dtw.evaluateIndividual(filenames[2]);
-        
-        DTWExtendedTester dtwps = DTWExtendedTester();
-        dtwps.setInterpolate(20);
-        dtwps.setReduce(i);
-        dtwps.setOutputFilename("results/speedFinal3.csv");
-        dtwps.setTotalNrGest(20);
-        dtwps.evaluateIndividual(filenames[2]);
-
+    dtw.setOutputFilename("results/phase2.csv");
+    dtwps.setOutputFilename("results/phase2.csv");
+    gvf.setOutputFilename("results/phase2.csv");
+    vector<string> filenames = interUserSet()[2];
+    for (float phase = .0; phase < .95; phase += .1) {
+        dtw.setShift(phase);
+        dtw.evaluateIndividual(filenames);
+        dtwps.setShift(phase);
+        dtwps.evaluateIndividual(filenames);
+        gvf.setShift(phase);
+        gvf.evaluateIndividual(filenames);
     }
 }
 

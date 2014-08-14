@@ -54,6 +54,8 @@ public:
 
     void evaluateOnFirst(const vector<string> &filenames, int trainFile = 0) {
         map<int, vector<vector<Point> > >* templates = createAnotatedTemplates(filenames[trainFile]);
+        if (resize > 0)
+            resizeVocabulary(*templates, resize);
 
         trainFilename = filenames[trainFile];
 
@@ -82,8 +84,20 @@ public:
 
                 map<int, vector<vector<Point> > >* trials = createAnotatedTemplates(filenames[i]);
                 shiftTemplates(trials, shift);
-                resampleVocabulary(*trials, interpolate, reduce);
-                
+                if (resize > 0)
+                    resizeVocabulary(*trials, resize);
+                else
+                    resampleVocabulary(*trials, interpolate, reduce);
+
+
+//                ofstream tout;
+//                tout.open("phase3gesture.csv");
+//                for (int i = 0; i < trials->at(20)[0].size(); i++) {
+//                    tout << trials->at(20)[0][i].x << " " << trials->at(20)[0][i].y << " " << trials->at(20)[0][i].z << "\n";
+//                }
+//                tout.close();
+
+
                 for (int l = 0; l < gestureSet.size(); l++) {
                     for (int j = 0; j < NROFTRIALS; j++) {
                         for (int m = 0; m < trials->at(gestureSet[l])[j].size(); m++) {

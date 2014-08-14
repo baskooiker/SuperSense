@@ -110,7 +110,7 @@ public:
                 }
 
                 for (int j = 0; j < shiftAmount; j++)
-                    it->second[i].push_back(it->second[i + 1][it->second[i + 1].size() - 1 - j]);
+                    it->second[i].push_back(it->second[i + 1][j]);
 
             }
             if (deleteOne) {
@@ -132,11 +132,7 @@ public:
 
         trainFilename = filenames[trainFile];
 
-        int minus = 0;
-        if (shift > .01)
-            minus = 1;
-
-        for (int gestIt = 0; gestIt < NROFTRIALS - minus; gestIt++) {
+        for (int gestIt = 0; gestIt < NROFTRIALS; gestIt++) {
             printf("iter %d\n", gestIt);
             gestNumber = gestIt;
             vector<VectorDTW> dtwBank;

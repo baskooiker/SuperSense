@@ -199,6 +199,11 @@ public:
             trainFilename = filename = filenames[trainFileNr];
 
             float correct[templates->size()];
+            int total[templates->size()];
+            for(int i = 0; i < templates->size(); i++){
+                correct[i] = 0.;
+                total[i] = 0;
+            }
 
             int index = 0;
             if (print)
@@ -215,6 +220,7 @@ public:
                 float sum2 = 0.;
                 counter2 = 0.;
 
+                index = 0;
                 for (map<int, vector<vector<Point> > >::iterator it = templates->begin(); it != templates->end(); it++) {
                     std::vector<vector<Point> > gesture = it->second;
 
@@ -227,7 +233,7 @@ public:
                             sample.push_back(ay.value(gesture[ki][j].y));
                             sample.push_back(az.value(gesture[ki][j].z));
 
-//                            printf("%f %f %f\n", ax.value(), ay.value(), az.value());
+                            //                            printf("%f %f %f\n", ax.value(), ay.value(), az.value());
 
                             yin->process(sample);
                             hb.put(yin->isSync() ? 1 : 0);
@@ -238,22 +244,39 @@ public:
                                 sum2 += 1;
                                 correct[index]++;
                             }
+                            total[index]++;
                             counter2++;
                         }
                     }
+                    index++;
                 }
                 sum2 /= counter2;
                 sum += sum2;
                 counter++;
-                correct[index++] /= (float) counter2;
+//                correct[index] /= (float) counter2;
                 printf("%f\n", sum2);
             }
 
+            out.open(outputFilename.c_str(), fstream::out | fstream::app);
+            {
+                out << filename.c_str();
+                float sum = 0.;
+                for (int i = 0; i < templates->size(); i++) {
+                    sum += ((float) correct[i] / (float) total[i]);
+                    out << ";" << ((float) correct[i] / (float) total[i]);
+                    printf("%d %d %f\n", correct[i], total[i], ((float) correct[i] / (float) total[i]));
+                }
+                out << ";" << (sum / (float) templates->size());
+                out << ";" << maxLength << ";" << dipThreshold << ";" << alpha << ";" << nroftrialinrow;
+                out << "\n";
+            }
+            out.close();
 
             sum = sum / counter;
             printf("Total = %f\n", sum);
 
-            writeResults();
+
+            //            writeResults();
         }
 
         delete yin;

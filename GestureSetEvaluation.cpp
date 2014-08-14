@@ -665,3 +665,7 @@ void GestureSetEvaluation::setInterpolate(int f) {
 void GestureSetEvaluation::setReduce(int f) {
     reduce = f;
 }
+
+ void GestureSetEvaluation::setResize(int i){
+     resize = i;
+ }

@@ -38,6 +38,7 @@ public:
     void setShift(float f);
     void setInterpolate(int i);
     void setReduce(int i);
+    void setResize(int i);
 
     bool everySample;
 
@@ -134,6 +135,8 @@ protected:
     int hbSize = 55;
     
     vector<int> gestureSet;
+    
+    int resize = -1;
 };
 
 #endif	/* GESTURESETEVALUATION_H */

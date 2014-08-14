@@ -38,21 +38,45 @@ void resampleTrial(std::vector<Point> &trial, int interpolate, int resample) {
     reduceTrial(trial, resample);
 }
 
-//void resmapleGesture(std::vector<std::vector<Point> > &gest, int interpolate, int resample) {
-//    std::vector<std::vector<Point> > resampledGest;
-//    for (int i = 0; i < gest.size(); i++) {
-//        resampleGest.push_back(resampleTrial(gest[i], interpolate, resample));
-//    }
-//    return resampledGest;
-//}
 
 void resampleVocabulary(std::map<int, std::vector<std::vector<Point> > > &voc, int interpolate, int resample) {
-    std::map<int, std::vector<std::vector<Point> > > resampledVoc;
     for (std::map<int, std::vector<std::vector<Point> > >::iterator it = voc.begin(); it != voc.end(); it++) {
         for (int i = 0; i < it->second.size(); i++) {
             resampleTrial(it->second[i], interpolate, resample);
         }
     }
+}
+
+void resizeTrial(std::vector<Point>& trial, int size){
+    int resample = trial.size();
+    interpolateTrial(trial, size-1);
+    reduceTrial(trial, resample);
+}
+
+void resizeVocabulary(std::map<int, std::vector<std::vector<Point> > > &voc, int size) {
+//    for(std::map<int, std::vector<std::vector<Point> > >::iterator it = voc.begin(); it != voc.end(); it++){
+//        printf("\ngesture %d\n", it->first);
+//        for(int i = 0; i < it->second.size(); i++){
+//            printf("size of %d: %d", i, it->second[i].size());
+//        }
+//    }
+    
+    for (std::map<int, std::vector<std::vector<Point> > >::iterator it = voc.begin(); it != voc.end(); it++) {
+        for (int i = 0; i < it->second.size(); i++) {
+            resizeTrial(it->second[i], size);
+        }
+    }
+    
+    for(std::map<int, std::vector<std::vector<Point> > >::iterator it = voc.begin(); it != voc.end(); it++){
+        printf("\ngesture %d\n", it->first);
+        for(int i = 0; i < it->second.size(); i++){
+            printf("\nsize of %d: %d\n", i, it->second[i].size());
+            for(int j = 0; j < it->second[i].size(); j++){
+                printf("%.3f %.3f %.3f\n",it->second[i][j].x,it->second[i][j].y,it->second[i][j].z);
+            }
+        }
+    }
+    
 }
 
 
